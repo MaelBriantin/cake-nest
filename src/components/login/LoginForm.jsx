@@ -1,7 +1,9 @@
 import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 export const LoginForm = () => {
     const [user, setUser] = useState('')
+    const navigate = useNavigate();
     const handleInputChange = (e) => {
         const firstName = e.target.value;
         setUser(firstName);
@@ -9,8 +11,8 @@ export const LoginForm = () => {
     const handleConnection = (e) => {
         e.preventDefault()
         if (user !== '') {
-            alert(`Bonjour ${user}`);
-            setUser('');
+            navigate('/order', { state: { user } })
+            //setUser('');
         } else {
             alert('Vous devez entrer un prénom pour vous connecter !');
         }
