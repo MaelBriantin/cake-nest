@@ -60,7 +60,9 @@ const borderRadius = {
 };
 const shadows = {
     header: "black 10px 8px 100px",
-    frame: "2px 10px 14px 6px rgba(0,0,0,0.2)"
+    frame: "2px 10px 14px 6px rgba(0,0,0,0.2)",
+    card: "-8px 8px 20px 0px rgb(0 0 0 / 20%)"
+
 };
 
 export const theme = {

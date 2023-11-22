@@ -28,7 +28,6 @@ const Container = styled.div`
   width: 30%;
   margin: auto;
   position: relative;
-  z-index: 3;
 `
 
 
