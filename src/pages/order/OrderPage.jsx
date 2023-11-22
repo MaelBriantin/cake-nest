@@ -1,4 +1,4 @@
-import {Link, Navigate, redirect, useLocation, useNavigate, useNavigation} from "react-router-dom";
+import {Link, Navigate, redirect, useLocation, useNavigate} from "react-router-dom";
 import {useEffect} from "react";
 
 export const OrderPage = () => {
@@ -15,9 +15,9 @@ export const OrderPage = () => {
     }, [state, navigate]);
 
     return state && (
-        <>
-            <h1>Bonjour {state.user}</h1>
-            <button onClick={() => handleDisconnect()}>Déconnexion</button>
-        </>
+        <div>
+            {/*<h1>Bonjour {state.user}</h1>*/}
+            {/*<button onClick={() => handleDisconnect()}>Déconnexion</button>*/}
+        </div>
     )
 }

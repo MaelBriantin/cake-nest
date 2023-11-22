@@ -58,7 +58,10 @@ const borderRadius = {
     extraRound: "15px",
     circle: "50%",
 };
-const shadows = {};
+const shadows = {
+    header: "black 10px 8px 100px",
+    frame: "2px 10px 14px 6px rgba(0,0,0,0.2)"
+};
 
 export const theme = {
     colors,

@@ -2,19 +2,29 @@ import cakeLogo from "../../assets/images/cupcake.png";
 import {theme} from "../../theme/index.js";
 import styled from "styled-components";
 
-export const AppName = () => {
-    return (
-        <>
-            <Title>
+export const AppName = (props) => {
+    const {size} = props
+    if (size === 'login') {
+        return (
+            <LoginTitle>
                 Cake
-                <Logo alt='' src={cakeLogo}/>
+                <LoginLogo alt='' src={cakeLogo}/>
                 Nest
-            </Title>
-        </>
-    )
+            </LoginTitle>
+        )
+    } if (size === 'header') {
+        return (
+            <HeaderTitle>
+                Cake
+                <HeaderLogo alt='' src={cakeLogo}/>
+                Nest
+            </HeaderTitle>
+        )
+    }
+
 }
 
-const Title = styled.div`
+const LoginTitle = styled.div`
   display: flex;
   align-content: center;
   justify-content: center;
@@ -26,8 +36,24 @@ const Title = styled.div`
   color: ${theme.colors.primary};
 `
 
-const Logo = styled.img`
+const HeaderTitle = styled.div`
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  gap: 2px;
+  text-transform: uppercase;
+  font-family: 'Open Sans', sans-serif;
+  font-size: ${theme.fonts.size.P4};
+  font-weight: ${theme.fonts.weights.bold};
+  color: ${theme.colors.primary};
+`
+
+const LoginLogo = styled.img`
   width: 70px;
   height: 70px;
-  padding-bottom: 25px;
+`
+
+const HeaderLogo = styled.img`
+  width: 40px;
+  height: 40px;
 `
