@@ -3,6 +3,7 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {OrderPage} from "./pages/order/OrderPage.jsx";
 import {ErrorPage} from "./pages/error/ErrorPage.jsx";
 import "./App.css"
+import {Layout} from "./components/layouts/Layout.jsx";
 
 function App() {
 
@@ -11,7 +12,9 @@ function App() {
             <Routes>
                 {/*<LoginPage />*/}
                 <Route path='/' element={<LoginPage/>}/>
-                <Route path='order' element={<OrderPage/>}/>
+                <Route element={<Layout/>}>
+                    <Route path={'order'} element={<OrderPage/>} />
+                </Route>
                 <Route path='*' element={<ErrorPage/>}/>
             </Routes>
         </BrowserRouter>
