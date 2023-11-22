@@ -10,7 +10,7 @@ export const LoginPage = () => {
     return (
         <LoginStyle>
             <Container>
-                <AppName />
+                <AppName size={'login'} />
                 <LoginSubtitle />
                 <LoginForm />
             </Container>
