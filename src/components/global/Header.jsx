@@ -13,7 +13,7 @@ export const Header = () => {
 }
 
 const NavBar = styled.div`
-  height: 10vh;
+  height: 10%;
   display: flex;
   justify-content: space-between;
   padding-left: 15px;
