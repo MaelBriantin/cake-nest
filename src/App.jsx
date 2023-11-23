@@ -6,22 +6,28 @@ import "./App.css"
 import {Layout} from "./components/layouts/Layout.jsx";
 import {AdminPanel} from "./components/admin/AdminPanel.jsx";
 import {AdminContext, AdminProvider} from "./context/AdminContext.jsx";
+import {StoreProvider} from "./context/StoreContext.jsx";
+import {UserProvider} from "./context/UserContext.jsx";
 
 function App() {
 
     return (
-        <AdminProvider>
-            <BrowserRouter>
-                <Routes>
-                    {/*<LoginPage />*/}
-                    <Route path='/' element={<LoginPage/>}/>
-                    <Route element={<Layout/>}>
-                        <Route path={'order'} element={<OrderPage/>} />
-                    </Route>
-                    <Route path='*' element={<ErrorPage/>}/>
-                </Routes>
-            </BrowserRouter>
-        </AdminProvider>
+            <AdminProvider>
+                <UserProvider>
+                    <StoreProvider>
+                        <BrowserRouter>
+                            <Routes>
+                                {/*<LoginPage />*/}
+                                <Route path='/' element={<LoginPage/>}/>
+                                <Route element={<Layout/>}>
+                                    <Route path={'order'} element={<OrderPage/>} />
+                                </Route>
+                                <Route path='*' element={<ErrorPage/>}/>
+                            </Routes>
+                        </BrowserRouter>
+                    </StoreProvider>
+                </UserProvider>
+            </AdminProvider>
     )
 }
 

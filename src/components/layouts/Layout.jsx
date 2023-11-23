@@ -3,16 +3,17 @@ import {theme} from "../../theme/index.js";
 import {Outlet} from "react-router-dom";
 import {Header} from "../global/Header.jsx";
 import {AdminPanel} from "../admin/AdminPanel.jsx";
-import {useState} from "react";
+import {useContext, useState} from "react";
+import {UserContext} from "../../context/UserContext.jsx";
 
 export const Layout = () => {
+    const {color} = useContext(UserContext)
     return (
-        <LayoutBackground>
+        <LayoutBackground $color={color}>
             <DisplayFrame>
                     <Header/>
                     <Main>
                         <Outlet />
-                        <AdminPanel />
                     </Main>
             </DisplayFrame>
         </LayoutBackground>
@@ -24,10 +25,11 @@ const LayoutBackground = styled.div`
   //width: 100vw;
   //overflow: hidden;
   padding: 20px 50px;
-  background: ${theme.colors.primary};
+  background: ${props => props.$color};
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: all 400ms;
 `
 
 const DisplayFrame = styled.div`

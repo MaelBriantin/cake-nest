@@ -26,6 +26,7 @@ export function Tab(props) {
 }
 
 const TabModel = styled.div`
+  user-select: none;
   padding-left: 5px;
   padding-right: 5px;
   display: flex;
@@ -39,13 +40,14 @@ const TabModel = styled.div`
   background: ${props => props.$isSelected ? theme.colors.background_white : theme.colors.background_white};
   color: ${props => props.$isSelected && theme.colors.primary};
   transition: all 200ms;
-  border: 1px solid${theme.colors.greyMedium};
+  border: 1px solid ${theme.colors.greyMedium};
   ${props => props.$isSelected && 'border-bottom: 0;'}
   &:hover{
-    color: ${props => !props.$isSelected && theme.colors.primary};;
+    color: ${props => !props.$isSelected && theme.colors.primary};
   }
 `
 const OpenTabModel = styled.div`
+  user-select: none;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -53,7 +55,7 @@ const OpenTabModel = styled.div`
   height: 40px;
   cursor: pointer;
   border-radius: ${theme.borderRadius.round} ${theme.borderRadius.round} 0 0;
-  border: 1px solid ${theme.colors.greyMedium};
+  border: 1px solid ${props => props.$openedPanel ? theme.colors.greyMedium : theme.colors.primary};
   background: ${props => !props.$openedPanel ? theme.colors.primary : theme.colors.background_white};
   color: ${props => !props.$openedPanel && theme.colors.white};
   &:hover{
