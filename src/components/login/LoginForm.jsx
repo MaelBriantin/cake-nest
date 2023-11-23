@@ -5,11 +5,16 @@ import {theme} from "../../theme/index.js";
 import {MdAccountCircle, MdKeyboardArrowRight} from "react-icons/md";
 
 export const LoginForm = () => {
-    const [user, setUser] = useState('')
+    const [user, setUser] = useState({
+        name: '',
+        isAdmin: false
+    })
     const navigate = useNavigate();
     const handleInputChange = (e) => {
-        const firstName = e.target.value;
-        setUser(firstName);
+        const username = e.target.value;
+        setUser(prevState => {
+            return {...prevState, name: username}
+        });
     }
     const handleConnection = (e) => {
         e.preventDefault()
@@ -25,7 +30,7 @@ export const LoginForm = () => {
         <Form>
             <Input>
                 <InputIcon><MdAccountCircle /></InputIcon>
-                <InputField onChange={handleInputChange} placeholder="Entrez votre prénom..." type="text" value={user} required />
+                <InputField onChange={handleInputChange} placeholder="Entrez votre prénom..." type="text" value={user.name} required />
             </Input>
             <PrimaryButton onClick={handleConnection}>Mon espace <MdKeyboardArrowRight style={{marginTop: '4px'}} /></PrimaryButton>
         </Form>

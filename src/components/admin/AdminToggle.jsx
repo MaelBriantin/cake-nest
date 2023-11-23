@@ -1,20 +1,23 @@
-import {useEffect, useState} from "react";
+import {useContext, useState} from "react";
 import styled from "styled-components";
-import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css'
 import {callToast} from "../../utils/call_toast.js";
 import {theme} from "../../theme/index.js";
+import {AdminContext} from "../../context/AdminContext.jsx";
 
-export const AdminToggle = () => {
+export const AdminToggle = (props) => {
     const [isAdmin, setIsAdmin] = useState(false)
+    const {adminMode, setAdminMode} = useContext(AdminContext)
     const enableAdmin = () => {
         callToast('Mode admin activé !');
         setIsAdmin(true)
+        setAdminMode(true)
     }
 
     const disableAdmin = () => {
         callToast('Mode admin désactivé !');
         setIsAdmin(false)
+        setAdminMode(false)
     }
 
     if (isAdmin) {
@@ -37,7 +40,7 @@ export const AdminToggle = () => {
 
 
 const ToggleOn = styled.div`
-  width: 175px;
+  width: 160px;
   height: 25px;
   background: ${theme.colors.background_white};
   border-radius: ${theme.borderRadius.extraRound};
@@ -46,13 +49,12 @@ const ToggleOn = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 5px;
-  transition: all 400ms;
   border: ${theme.colors.primary} 2px solid;
 `
 
 
 const ToggleOff = styled.div`
-  width: 175px;
+  width: 160px;
   height: 25px;
   background: ${theme.colors.background_dark};
   border-radius: ${theme.borderRadius.extraRound};
@@ -61,7 +63,6 @@ const ToggleOff = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 5px;
-  transition: all 400ms;
   border: ${theme.colors.primary} 2px solid;
 `
 
@@ -84,4 +85,5 @@ const ToggleTitle = styled.div`
   color: ${theme.colors.primary};
   margin-right: 5px;
   margin-left: 5px;
+  font-size: ${theme.fonts.size.P0};
 `
