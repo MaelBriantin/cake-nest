@@ -37,9 +37,10 @@ const LoginTitle = styled.div`
 `
 
 const HeaderTitle = styled.div`
+  width: 25%;
   display: flex;
   align-content: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 2px;
   text-transform: uppercase;
   font-family: 'Open Sans', sans-serif;

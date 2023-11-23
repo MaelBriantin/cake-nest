@@ -33,7 +33,7 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 100px;
+  gap: 50px;
   flex-wrap: wrap;
   overflow: scroll;
 `

@@ -35,7 +35,7 @@ const PrimaryButtonStyle = styled.div`
   font-family: 'Open Sans', 'serif';
   cursor: pointer;
   border-radius: ${theme.borderRadius.round};
-  border: solid 1px ${theme.colors.primary};
+  border: solid 4px ${theme.colors.primary};
   
   &:hover {
     background: ${theme.colors.white};

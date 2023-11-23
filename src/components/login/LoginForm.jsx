@@ -45,6 +45,7 @@ const Input = styled.div`
   cursor: text;
   position: relative;
   border-radius: ${theme.borderRadius.round};
+  border: solid 2px ${theme.colors.background_white};
 `
 
 const InputIcon = styled.div`
@@ -82,6 +83,7 @@ const PrimaryButton = styled.div`
   font-family: 'Open Sans', 'serif';
   cursor: pointer;
   border-radius: ${theme.borderRadius.round};
+  border: solid 2px ${theme.colors.primary};
   
   &:hover {
     background: ${theme.colors.white};
