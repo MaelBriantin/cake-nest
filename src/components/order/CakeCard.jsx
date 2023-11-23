@@ -5,7 +5,6 @@ import {formatPrice} from "../../utils/maths.js"
 import cake from "../../../public/images/cupcake-item.png"
 
 export const CakeCard = (props) => {
-    console.log(props)
     const {image, title, price} = props
     return (
         <Card>

@@ -2,7 +2,7 @@ import {AppName} from "./AppName.jsx";
 import styled from "styled-components";
 import {theme} from "../../theme/index.js";
 import {UserInfos} from "../header/UserInfos.jsx";
-import {AdminToggle} from "../header/AdminToggle.jsx";
+import {AdminToggle} from "../admin/AdminToggle.jsx";
 
 export const Header = () => {
     return (

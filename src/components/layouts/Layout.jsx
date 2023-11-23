@@ -2,15 +2,18 @@ import styled from "styled-components";
 import {theme} from "../../theme/index.js";
 import {Outlet} from "react-router-dom";
 import {Header} from "../global/Header.jsx";
+import {AdminPanel} from "../admin/AdminPanel.jsx";
+import {useState} from "react";
 
 export const Layout = () => {
     return (
         <LayoutBackground>
             <DisplayFrame>
-                <Header/>
-                <Main>
-                    <Outlet />
-                </Main>
+                    <Header/>
+                    <Main>
+                        <Outlet />
+                        <AdminPanel />
+                    </Main>
             </DisplayFrame>
         </LayoutBackground>
     )
@@ -42,4 +45,5 @@ const Main = styled.div`
   display: flex;
   justify-content: center;
   overflow: hidden;
+  position: relative;
 `

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import {useLocation, useNavigate} from "react-router-dom";
 import {theme} from "../../theme/index.js";
 import {MdAccountCircle} from "react-icons/md";
-import {AdminToggle} from "./AdminToggle.jsx";
+import {AdminToggle} from "../admin/AdminToggle.jsx";
 
 export const UserInfos = (props) => {
     const navigate = useNavigate()
@@ -17,7 +17,7 @@ export const UserInfos = (props) => {
         <Connection>
             <AdminToggle />
             <Infos>
-                <h1>Salut <span>{state.user}</span></h1>
+                <h1>Salut <span>{state.user.name}</span></h1>
                 <p onClick={() => handleDisconnect()}>Se déconnecter</p>
             </Infos>
             <Icon>
