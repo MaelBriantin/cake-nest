@@ -7,7 +7,8 @@ import {AdminContext} from "../../context/AdminContext.jsx";
 
 export const AdminToggle = (props) => {
     const [isAdmin, setIsAdmin] = useState(false)
-    const {adminMode, setAdminMode} = useContext(AdminContext)
+    const {adminMode, setAdminMode, setOpenedPanel} = useContext(AdminContext)
+
     const enableAdmin = () => {
         callToast('Mode admin activé !');
         setIsAdmin(true)
@@ -18,12 +19,13 @@ export const AdminToggle = (props) => {
         callToast('Mode admin désactivé !');
         setIsAdmin(false)
         setAdminMode(false)
+        setOpenedPanel(true)
     }
 
     if (isAdmin) {
         return (
             <ToggleOn onClick={() => disableAdmin()}>
-                <ToggleTitle>Mode admin ON</ToggleTitle>
+                <ToggleTitleOn>Mode admin ON</ToggleTitleOn>
                 <ToggleButtonOn />
             </ToggleOn>
         )
@@ -31,7 +33,7 @@ export const AdminToggle = (props) => {
         return (
             <ToggleOff onClick={() => enableAdmin()}>
                 <ToggleButtonOff />
-                <ToggleTitle>Mode admin OFF</ToggleTitle>
+                <ToggleTitleOff>Mode admin OFF</ToggleTitleOff>
             </ToggleOff>
         )
     }
@@ -56,14 +58,14 @@ const ToggleOn = styled.div`
 const ToggleOff = styled.div`
   width: 160px;
   height: 25px;
-  background: ${theme.colors.background_dark};
+  background: ${theme.colors.primary};
   border-radius: ${theme.borderRadius.extraRound};
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 5px;
-  border: ${theme.colors.primary} 2px solid;
+  border: ${theme.colors.white} 2px solid;
 `
 
 const ToggleButtonOn = styled.div`
@@ -77,12 +79,19 @@ const ToggleButtonOn = styled.div`
 const ToggleButtonOff = styled.div`
   height: 25px;
   width: 25px;
-  background: ${theme.colors.primary};
+  background: ${theme.colors.white};
   border-radius: ${theme.borderRadius.circle};
 `
 
-const ToggleTitle = styled.div`
+const ToggleTitleOn = styled.div`
   color: ${theme.colors.primary};
+  margin-right: 5px;
+  margin-left: 5px;
+  font-size: ${theme.fonts.size.P0};
+`
+
+const ToggleTitleOff = styled.div`
+  color: ${theme.colors.white};
   margin-right: 5px;
   margin-left: 5px;
   font-size: ${theme.fonts.size.P0};

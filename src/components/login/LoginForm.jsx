@@ -1,20 +1,20 @@
-import {useState} from "react";
+import {useContext, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import styled from "styled-components";
 import {theme} from "../../theme/index.js";
 import {MdAccountCircle, MdKeyboardArrowRight} from "react-icons/md";
+import {UserContext} from "../../context/UserContext.jsx";
 
 export const LoginForm = () => {
-    const [user, setUser] = useState({
-        name: '',
-        isAdmin: false
-    })
+    const {user, setUser} = useContext(UserContext)
+    // const [user, setUser] = useState({
+    //     name: '',
+    //     isAdmin: false
+    // })
     const navigate = useNavigate();
     const handleInputChange = (e) => {
-        const username = e.target.value;
-        setUser(prevState => {
-            return {...prevState, name: username}
-        });
+        const user = e.target.value;
+        setUser(user);
     }
     const handleConnection = (e) => {
         e.preventDefault()
@@ -30,7 +30,7 @@ export const LoginForm = () => {
         <Form>
             <Input>
                 <InputIcon><MdAccountCircle /></InputIcon>
-                <InputField onChange={handleInputChange} placeholder="Entrez votre prénom..." type="text" value={user.name} required />
+                <InputField onChange={handleInputChange} placeholder="Entrez votre prénom..." type="text" value={user} required />
             </Input>
             <PrimaryButton onClick={handleConnection}>Mon espace <MdKeyboardArrowRight style={{marginTop: '4px'}} /></PrimaryButton>
         </Form>
@@ -56,7 +56,7 @@ const Input = styled.div`
 const InputIcon = styled.div`
   margin: 0;
   position: absolute;
-  left: 10%;
+  left: 8%;
   top: 50%;
   transform: translateY(-40%);
   font-size: ${theme.fonts.size.P3};

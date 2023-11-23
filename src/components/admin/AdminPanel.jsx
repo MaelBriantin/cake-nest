@@ -7,20 +7,47 @@ import {IoMdAdd} from "react-icons/io";
 import {MdEdit} from "react-icons/md";
 import {AddCakeForm} from "./AddCakeForm.jsx";
 import {EditCakeForm} from "./EditCakeForm.jsx";
+import {UserContext} from "../../context/UserContext.jsx";
 export const AdminPanel = () => {
-    const {openedPanel, adminMode, selectedTab, setSelectedTab} = useContext(AdminContext)
+    const {user, color, setColor} = useContext(UserContext)
+    const {openedPanel, setOpenedPanel, adminMode, selectedTab, setSelectedTab} = useContext(AdminContext)
     const [selectedAdd, setSelectedAdd] = useState(false)
     const [selectedModify, setSelectedModify] = useState(false)
+    const [count, setCount] = useState(0)
+    //const [color, setColor] = useState(theme.colors.primary)
     const handleAdd = () => {
+        setOpenedPanel(false)
         setSelectedTab('add')
     }
     const handleEdit = () => {
+        setOpenedPanel(false)
         setSelectedTab('edit')
     }
     useEffect(() => {
         setSelectedAdd(selectedTab === 'add');
         setSelectedModify(selectedTab === 'edit');
     }, [selectedTab]);
+    const changeColor = () => {
+        count < 10 && setCount(count +1)
+        const randomColor = Math.floor(Math.random()*16777215).toString(16);
+        setColor(`#${'0'.repeat(6 - randomColor.length)}${randomColor}`);
+    }
+    const stopColor = () => {
+        setCount(0)
+        setColor(theme.colors.primary)
+    }
+
+    useEffect(() => {
+        let interval;
+        if (count === 10) {
+            // Démarrer l'intervalle seulement si count est inférieur à 10
+            interval = setInterval(() => {
+                const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+                setColor(`#${'0'.repeat(6 - randomColor.length)}${randomColor}`);
+            }, 1000);
+        }
+        return () => clearInterval(interval);
+    }, [count, setCount]);
     return (
         <Panel $openedPanel={openedPanel} $adminMode={adminMode}>
             <Tabs>
@@ -31,7 +58,12 @@ export const AdminPanel = () => {
             <Content>
                 {selectedTab === 'add'
                     ? <AddCakeForm/>
-                    : <EditCakeForm/>
+                    : selectedTab === 'edit'
+                    ? <EditCakeForm/>
+                        : <Default $color={color}>
+                            { count < 10 ? <p>Hey,&#x20;<span onClick={() => changeColor()}>{user}</span>&#x20;! Ça va ?</p>
+                            : <p>IT'S&#x20;<span onClick={() => stopColor()}>RAINBOW</span>&#x20;TIME!!!</p>}
+                        </Default>
                 }
             </Content>
         </Panel>
@@ -65,4 +97,21 @@ const Content = styled.div`
   background: ${theme.colors.background_white};
   border-top: ${theme.colors.greyMedium} 1px solid;
   box-shadow: ${theme.shadows.card};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+const Default = styled.div`
+  user-select: none;
+  font-size: ${theme.fonts.size.P4};
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  span{
+    transition: all 400ms;
+    font-weight: ${theme.fonts.weights.bold};
+    color: ${props => props.$color};
+  }
 `

@@ -3,21 +3,28 @@ import {useLocation, useNavigate} from "react-router-dom";
 import {theme} from "../../theme/index.js";
 import {MdAccountCircle} from "react-icons/md";
 import {AdminToggle} from "../admin/AdminToggle.jsx";
+import {AdminContext} from "../../context/AdminContext.jsx";
+import {useContext} from "react";
+import {UserContext} from "../../context/UserContext.jsx";
 
 export const UserInfos = (props) => {
+    const {user, setUser, setColor} = useContext(UserContext)
     const navigate = useNavigate()
-    const location = useLocation();
-
-    const state = location.state
+    const {setAdminMode, setOpenedPanel, setSelectedTab} = useContext(AdminContext)
     const handleDisconnect = () => {
         navigate('/')
+        setColor(theme.colors.primary)
+        setUser('')
+        setAdminMode(false)
+        setOpenedPanel(true)
+        setSelectedTab('')
     }
 
     return (
         <Connection>
             <AdminToggle />
             <Infos>
-                <h1>Salut <span>{state.user.name}</span></h1>
+                <h1>Salut, <span>{user}</span> !</h1>
                 <p onClick={() => handleDisconnect()}>Se déconnecter</p>
             </Infos>
             <Icon>
