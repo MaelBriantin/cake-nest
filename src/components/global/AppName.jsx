@@ -25,6 +25,7 @@ export const AppName = (props) => {
 }
 
 const LoginTitle = styled.div`
+  user-select: none;
   display: flex;
   align-content: center;
   justify-content: center;
@@ -37,9 +38,11 @@ const LoginTitle = styled.div`
 `
 
 const HeaderTitle = styled.div`
+  user-select: none;
+  width: 25%;
   display: flex;
   align-content: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 2px;
   text-transform: uppercase;
   font-family: 'Open Sans', sans-serif;

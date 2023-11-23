@@ -2,15 +2,24 @@ import styled from "styled-components";
 import {theme} from "../../theme/index.js";
 import {Button} from "../global/Button.jsx";
 import {formatPrice} from "../../utils/maths.js"
-import cake from "../../../public/images/cupcake-item.png"
+import {TiDelete} from "react-icons/ti";
+import {useContext} from "react";
+import {AdminContext} from "../../context/AdminContext.jsx";
+import {StoreContext} from "../../context/StoreContext.jsx";
 
 export const CakeCard = (props) => {
-    console.log(props)
-    const {image, title, price} = props
+    const {adminMode} = useContext(AdminContext)
+    const {store, setStore} = useContext(StoreContext)
+    const {image, title, price, id} = props
+    const handleDelete = (id) => {
+        const newStore = store.filter(item => item.id !== id)
+        setStore(newStore)
+    }
     return (
         <Card>
-            <CardImage src={image} alt={''}/>
+            <CardImage><img src={image} alt={''}/></CardImage>
             <BottomCard>
+                {adminMode && <RemoveButton onClick={() => handleDelete(id)}><TiDelete/></RemoveButton>}
                 <CardTitle>{title}</CardTitle>
                 <CardSubTitle>
                     <p>{formatPrice(price)}</p>
@@ -21,7 +30,22 @@ export const CakeCard = (props) => {
     )
 }
 
+const RemoveButton = styled.div`
+  font-size: ${theme.fonts.size.P4};
+  color: ${theme.colors.primary};
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  cursor: pointer;
+  transition: all 200ms;
+  &:hover {
+    color: ${theme.colors.redSecondary};
+  }
+`
+
 const Card = styled.div`
+  user-select: none;
+  position: relative;
   align-items: center;
   border-radius: ${theme.borderRadius.extraRound};
   padding: 10px;
@@ -29,10 +53,25 @@ const Card = styled.div`
     width: 200px;
     background: ${theme.colors.background_white};
     box-shadow: ${theme.shadows.card};
+  transition: all 400ms;
+  &:hover{
+    transform: scale(1.1);
+  }
 `
 
-const CardImage = styled.img`
+const CardImage = styled.div`
   height: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  img {
+    height: 100%;
+    transition: all 600ms;
+  }
+  img:hover{
+    //transform: scale(1.1);
+  }
 `
 
 const CardTitle = styled.div`

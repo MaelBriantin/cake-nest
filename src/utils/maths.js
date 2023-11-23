@@ -15,3 +15,7 @@ export function replaceFrenchCommaWithDot(price) {
     if (typeof price === "string") price = parseFloat(price.replace(",", "."))
     return price
 }
+
+export const isNumeric = (value) => {
+    return !isNaN(parseFloat(value)) && isFinite(value);
+}

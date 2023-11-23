@@ -1,15 +1,20 @@
-import {useState} from "react";
+import {useContext, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import styled from "styled-components";
 import {theme} from "../../theme/index.js";
 import {MdAccountCircle, MdKeyboardArrowRight} from "react-icons/md";
+import {UserContext} from "../../context/UserContext.jsx";
 
 export const LoginForm = () => {
-    const [user, setUser] = useState('')
+    const {user, setUser} = useContext(UserContext)
+    // const [user, setUser] = useState({
+    //     name: '',
+    //     isAdmin: false
+    // })
     const navigate = useNavigate();
     const handleInputChange = (e) => {
-        const firstName = e.target.value;
-        setUser(firstName);
+        const user = e.target.value;
+        setUser(user);
     }
     const handleConnection = (e) => {
         e.preventDefault()
@@ -45,12 +50,13 @@ const Input = styled.div`
   cursor: text;
   position: relative;
   border-radius: ${theme.borderRadius.round};
+  border: solid 2px ${theme.colors.background_white};
 `
 
 const InputIcon = styled.div`
   margin: 0;
   position: absolute;
-  left: 10%;
+  left: 8%;
   top: 50%;
   transform: translateY(-40%);
   font-size: ${theme.fonts.size.P3};
@@ -82,6 +88,7 @@ const PrimaryButton = styled.div`
   font-family: 'Open Sans', 'serif';
   cursor: pointer;
   border-radius: ${theme.borderRadius.round};
+  border: solid 2px ${theme.colors.primary};
   
   &:hover {
     background: ${theme.colors.white};
