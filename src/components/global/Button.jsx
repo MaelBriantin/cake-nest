@@ -4,13 +4,13 @@ import {theme} from "../../theme/index.js";
 
 export const Button = (props) => {
     const primary = props?.style === 'primary';
-    const {value, onClick, size} = props;
+    const {value, onClick, size, isSelected} = props;
     if (primary) {
         if (size === 'big') {
             return <PrimaryButtonStyle onClick={onClick}>{value}</PrimaryButtonStyle>
         }
         else if (size === 'small') {
-            return <SmallPrimaryButtonStyle onClick={onClick}>{value}</SmallPrimaryButtonStyle>
+            return <SmallPrimaryButtonStyle $isSelected={isSelected} onClick={onClick}>{value}</SmallPrimaryButtonStyle>
         }
         else {
             return <PrimaryButtonStyle onClick={onClick}>{value}</PrimaryButtonStyle>
@@ -24,7 +24,7 @@ const PrimaryButtonStyle = styled.div`
   width: 100%;
   height: 60px;
   text-decoration: none;
-  background: ${theme.colors.primary};
+  background: ${props => props.$isSelected ? theme.colors.white : theme.colors.primary};
   transition: 200ms all;
   color: ${theme.colors.white};
   display: flex;

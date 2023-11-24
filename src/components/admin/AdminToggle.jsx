@@ -45,7 +45,7 @@ const ToggleOn = styled.div`
   width: 160px;
   height: 25px;
   background: ${theme.colors.background_white};
-  border-radius: ${theme.borderRadius.extraRound};
+  border-radius: 50px;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
@@ -59,13 +59,13 @@ const ToggleOff = styled.div`
   width: 160px;
   height: 25px;
   background: ${theme.colors.primary};
-  border-radius: ${theme.borderRadius.extraRound};
+  border-radius: 50px;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 5px;
-  border: ${theme.colors.white} 2px solid;
+  border: ${theme.colors.primary} 2px solid;
 `
 
 const ToggleButtonOn = styled.div`
