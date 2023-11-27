@@ -73,12 +73,12 @@ export const AdminPanel = () => {
 
 const Panel = styled.div`
   display: ${props => props.$adminMode ? "block" : "none"};
-  height: 400px;
-  width: 100%;
   position: absolute;
   z-index: 3;
   bottom: 0;
-  left: 0;
+  right: 0;
+  height: 400px;
+  width: 85%;
   transition: all 400ms;
   transform: translateY(${props => props.$openedPanel ? "90%" : "0%"});
 `
@@ -96,8 +96,8 @@ const Content = styled.div`
   height: 100%;
   width: 100%;
   background: ${theme.colors.background_white};
-  border-top: ${theme.colors.greyMedium} 1px solid;
-  box-shadow: ${theme.shadows.card};
+  border: ${theme.colors.greyMedium} 1px solid;
+  //box-shadow: ${theme.shadows.card};
   display: flex;
   justify-content: center;
   align-items: center;
