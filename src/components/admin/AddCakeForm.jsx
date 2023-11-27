@@ -53,8 +53,9 @@ export function AddCakeForm() {
         }
     }
     const handleAddCake = () => {
-        const id = store.length > 0 ? store[store.length - 1].id + 1 : 1;
-
+        //const id = store.length > 0 ? store.length + 1 : 1;
+        const id = crypto.randomUUID()
+        console.log(id)
         const cakeToAdd = {
             id: id,
             imageSource: newCake.imageSource,
@@ -64,7 +65,7 @@ export function AddCakeForm() {
             isAvailable: newCake.isAvailable,
             isAdvertised: newCake.isAdvertised,
         };
-        setStore([...store, cakeToAdd])
+        setStore([cakeToAdd, ...store])
         setAddedCake(true)
         setTimeout(() => setAddedCake(false), 2000)
         setNewCake(emptyItem)

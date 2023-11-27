@@ -76,6 +76,7 @@ const Panel = styled.div`
   height: 400px;
   width: 100%;
   position: absolute;
+  z-index: 3;
   bottom: 0;
   left: 0;
   transition: all 400ms;
