@@ -38,7 +38,7 @@ export const CakeCard = (props) => {
                     <CardTitle >{title}</CardTitle>
                     <CardSubTitle $isSelected={isSelected} $adminMode={adminMode}>
                         <p>{formatPrice(price)}</p>
-                        <Button isSelected={isSelected} style={'primary'} size={'small'} value={'Ajouter'} onClick={() => test()}></Button>
+                        <Button adminMode={adminMode} isSelected={isSelected} style={'primary'} size={'small'} value={'Ajouter'} onClick={() => test()}></Button>
                     </CardSubTitle>
                 </BottomCard>
             </Card>
@@ -73,7 +73,7 @@ const RemoveButton = styled.div`
 
 const Card = styled.div`
   user-select: none;
-  position: relative;
+  //position: relative;
   align-items: center;
   border-radius: ${theme.borderRadius.extraRound};
   padding: 10px;

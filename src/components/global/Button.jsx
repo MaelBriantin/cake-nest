@@ -4,13 +4,13 @@ import {theme} from "../../theme/index.js";
 
 export const Button = (props) => {
     const primary = props?.style === 'primary';
-    const {value, onClick, size, isSelected} = props;
+    const {value, onClick, size, isSelected, adminMode} = props;
     if (primary) {
         if (size === 'big') {
             return <PrimaryButtonStyle onClick={onClick}>{value}</PrimaryButtonStyle>
         }
         else if (size === 'small') {
-            return <SmallPrimaryButtonStyle $isSelected={isSelected} onClick={onClick}>{value}</SmallPrimaryButtonStyle>
+            return <SmallPrimaryButtonStyle $adminMode={adminMode} $isSelected={isSelected} onClick={onClick}>{value}</SmallPrimaryButtonStyle>
         }
         else {
             return <PrimaryButtonStyle onClick={onClick}>{value}</PrimaryButtonStyle>
@@ -48,8 +48,8 @@ const SmallPrimaryButtonStyle = styled.div`
   height: 30px;
   text-decoration: none;
   //background: ${theme.colors.primary};
-  background: ${props => props.$isSelected ? theme.colors.white : theme.colors.primary};
-  color: ${props => props.$isSelected ? theme.colors.primary : theme.colors.white};
+  background: ${props => props.$isSelected && props.$adminMode ? theme.colors.white : theme.colors.primary};
+  color: ${props => props.$isSelected && props.$adminMode ? theme.colors.primary : theme.colors.white};
   transition: 200ms all;
   display: flex;
   justify-content: center;
@@ -62,9 +62,9 @@ const SmallPrimaryButtonStyle = styled.div`
   border: solid 1px ${theme.colors.primary};
   
   &:hover {
-    border: solid 1px ${props => props.$isSelected ? theme.colors.white : theme.colors.primary};
-    background: ${props => props.$isSelected ? theme.colors.primary : theme.colors.white};
-    color: ${props => props.$isSelected ? theme.colors.white : theme.colors.primary};
+    border: solid 1px ${props => props.$isSelected && props.$adminMode ? theme.colors.white : theme.colors.primary};
+    background: ${props => props.$isSelected && props.$adminMode ? theme.colors.primary : theme.colors.white};
+    color: ${props => props.$isSelected && props.$adminMode ? theme.colors.white : theme.colors.primary};
   }
 `
 

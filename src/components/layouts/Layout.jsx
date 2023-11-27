@@ -14,6 +14,7 @@ export const Layout = () => {
                     <Header/>
                     <Main>
                         <Outlet />
+                        <AdminPanel />
                     </Main>
             </DisplayFrame>
         </LayoutBackground>
