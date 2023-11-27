@@ -5,9 +5,13 @@ import {Input} from "../global/Input.jsx";
 import {FaCamera, FaEuroSign, FaRegCheckCircle} from "react-icons/fa";
 import {GiCupcake} from "react-icons/gi";
 import {theme} from "../../theme/index.js";
+import {HiCursorClick} from "react-icons/hi";
 
 export function EditCakeForm() {
     const {selectedItem, store, setStore, setSelectedItem} = useContext(StoreContext)
+    useEffect(() => {
+        console.log(selectedItem)
+    }, [selectedItem, setSelectedItem]);
     const handleChangeTitle = (e) => {
         const storeCopy = [...store]
         storeCopy.map(i => {
@@ -37,23 +41,27 @@ export function EditCakeForm() {
         })
         setStore(storeCopy)
     }
+    const deleteElement = () => {
+        setSelectedItem({})
+        console.log(selectedItem)
+    }
+    console.log(selectedItem.price)
     return (
-        selectedItem !== {} && store.length > 0 ? (
+        Object.keys(selectedItem).length !== 0 ? (
             <Form>
                 <Image>
                     {selectedItem.imageSource === '' ? 'Aucune image' : <img src={selectedItem.imageSource} alt={'Il y a un problème avec votre image'} />}
                 </Image>
                 <Fields>
-                    <Input placeholder={'Nom du produit'} width={'300'} icon={<GiCupcake />} value={selectedItem.title} onInput={() => handleChangeTitle(event)} />
-                    <Input placeholder={'Lien url d\'une image (ex: https://la-photo-de-mo-produit.png)'} width={'650'} icon={<FaCamera />} value={selectedItem.imageSource} onInput={() => handleChangeUrl(event)} />
+                    <Input placeholder={'Nom du produit'} width={'300'} icon={<GiCupcake />} value={selectedItem.title || ''} onInput={() => handleChangeTitle(event)} />
+                    <Input placeholder={'Lien url d\'une image (ex: https://la-photo-de-mo-produit.png)'} width={'650'} icon={<FaCamera />} value={selectedItem.imageSource || ''} onInput={() => handleChangeUrl(event)} />
                     <Input placeholder={'Prix'} width={'150'} icon={<FaEuroSign />} type={'number'} value={selectedItem.price} onInput={() => handleChangePrice(event)} />
                     <p>Cliquer sur le produit pour le modifier en <u>temps réel</u></p>
                 </Fields>
             </Form>
         ) : (
-            store.length === 0 &&
             <Form>
-                Cliquez sur un élément
+                <NoSelectionStyle><p>Cliquez sur un produit pour le modifier</p><HiCursorClick /></NoSelectionStyle>
             </Form>
         )
     );
@@ -67,6 +75,18 @@ const Form = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   gap: 20px;
+`
+
+const NoSelectionStyle = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  height: 60%;
+  font-family: 'Pacifico', 'sans-serif';
+  font-size: ${theme.fonts.size.P4};
+  color: ${theme.colors.greyMedium};
 `
 
 const Image = styled.div`

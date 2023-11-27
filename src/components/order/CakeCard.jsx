@@ -20,28 +20,41 @@ export const CakeCard = (props) => {
             setSelectedItem(store.find(i => i.id === id))
         }
     }
+
     const handleDelete = () => {
         const newStore = store.filter(item => item.id !== id)
         setStore(newStore)
         if(selectedItem.id === id) {
-            resetSelectedItem()
+            setSelectedItem({})
         }
     }
 
     return (
-        <Card $adminMode={adminMode} $isSelected={isSelected}   onClick={() => handleAdminClick()}>
-            <CardImage><img src={image} alt={''}/></CardImage>
-            <BottomCard $adminMode={adminMode}>
-                {adminMode && <RemoveButton $isSelected={isSelected} onClick={() => handleDelete()}><TiDelete/></RemoveButton>}
-                <CardTitle>{title}</CardTitle>
-                <CardSubTitle $isSelected={isSelected} $adminMode={adminMode}>
-                    <p>{formatPrice(price)}</p>
-                    <Button isSelected style={'primary'} size={'small'} value={'Ajouter'} onClick={() => test()}></Button>
-                </CardSubTitle>
-            </BottomCard>
-        </Card>
+        <CardContainer $adminMode={adminMode}>
+            {adminMode && <RemoveButton $isSelected={isSelected} onClick={() => handleDelete(event)}><TiDelete/></RemoveButton>}
+            <Card $adminMode={adminMode} $isSelected={isSelected} onClick={() => handleAdminClick(event)} >
+                <CardImage  ><img src={image} alt={''}/></CardImage>
+                <BottomCard $adminMode={adminMode}>
+                    <CardTitle >{title}</CardTitle>
+                    <CardSubTitle $isSelected={isSelected} $adminMode={adminMode}>
+                        <p>{formatPrice(price)}</p>
+                        <Button isSelected={isSelected} style={'primary'} size={'small'} value={'Ajouter'} onClick={() => test()}></Button>
+                    </CardSubTitle>
+                </BottomCard>
+            </Card>
+        </CardContainer>
+
     )
 }
+
+const CardContainer = styled.div`
+    position: relative;
+  transition: all 400ms;
+  &:hover{
+    ${props => props.$adminMode && 'transform: scale(1.1)'};
+    ${props => props.$adminMode && 'cursor: pointer'};
+  }
+`
 
 const RemoveButton = styled.div`
   font-size: ${theme.fonts.size.P4};
@@ -50,7 +63,9 @@ const RemoveButton = styled.div`
   top: 2px;
   right: 2px;
   cursor: pointer;
+  width: fit-content;
   transition: all 200ms;
+  z-index: 2;
   &:hover {
     color: ${theme.colors.redSecondary};
   }
@@ -66,11 +81,11 @@ const Card = styled.div`
     width: 200px;
     background: ${props => props.$isSelected && props.$adminMode ? theme.colors.primary : theme.colors.background_white};
     box-shadow: ${theme.shadows.card};
-  transition: all 400ms;
-  &:hover{
-    ${props => props.$adminMode && 'transform: scale(1.1)'};
-    ${props => props.$adminMode && 'cursor: pointer'};
-  }
+  // transition: all 400ms;
+  // &:hover{
+  //   ${props => props.$adminMode && 'transform: scale(1.1)'};
+  //   ${props => props.$adminMode && 'cursor: pointer'};
+  // }
 `
 
 const CardImage = styled.div`

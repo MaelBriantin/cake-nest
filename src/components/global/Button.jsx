@@ -47,9 +47,10 @@ const SmallPrimaryButtonStyle = styled.div`
   width: 75px;
   height: 30px;
   text-decoration: none;
-  background: ${theme.colors.primary};
+  //background: ${theme.colors.primary};
+  background: ${props => props.$isSelected ? theme.colors.white : theme.colors.primary};
+  color: ${props => props.$isSelected ? theme.colors.primary : theme.colors.white};
   transition: 200ms all;
-  color: ${theme.colors.white};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -61,8 +62,9 @@ const SmallPrimaryButtonStyle = styled.div`
   border: solid 1px ${theme.colors.primary};
   
   &:hover {
-    background: ${theme.colors.white};
-    color: ${theme.colors.primary};
+    border: solid 1px ${props => props.$isSelected ? theme.colors.white : theme.colors.primary};
+    background: ${props => props.$isSelected ? theme.colors.primary : theme.colors.white};
+    color: ${props => props.$isSelected ? theme.colors.white : theme.colors.primary};
   }
 `
 
