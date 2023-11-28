@@ -55,7 +55,7 @@ export function AddCakeForm() {
     const handleAddCake = () => {
         //const id = store.length > 0 ? store.length + 1 : 1;
         const id = crypto.randomUUID()
-        console.log(id)
+        //console.log(id)
         const cakeToAdd = {
             id: id,
             imageSource: newCake.imageSource,

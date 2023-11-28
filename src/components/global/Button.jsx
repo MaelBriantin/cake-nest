@@ -1,10 +1,13 @@
 import {MdKeyboardArrowRight} from "react-icons/md";
 import styled from "styled-components";
 import {theme} from "../../theme/index.js";
+import {useContext} from "react";
+import {CartContext} from "../../context/CartContext.jsx";
 
 export const Button = (props) => {
     const primary = props?.style === 'primary';
     const {value, onClick, size, isSelected, adminMode} = props;
+
     if (primary) {
         if (size === 'big') {
             return <PrimaryButtonStyle onClick={onClick}>{value}</PrimaryButtonStyle>
@@ -44,6 +47,7 @@ const PrimaryButtonStyle = styled.div`
 `
 
 const SmallPrimaryButtonStyle = styled.div`
+  user-select: none;
   width: 75px;
   height: 30px;
   text-decoration: none;
@@ -60,6 +64,9 @@ const SmallPrimaryButtonStyle = styled.div`
   cursor: pointer;
   border-radius: ${theme.borderRadius.round};
   border: solid 1px ${theme.colors.primary};
+  position: absolute;
+  bottom: 35px;
+  right: 10px;
   
   &:hover {
     border: solid 1px ${props => props.$isSelected && props.$adminMode ? theme.colors.white : theme.colors.primary};
