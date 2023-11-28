@@ -14,7 +14,6 @@ export const Layout = () => {
                     <Header/>
                     <Main>
                         <Outlet />
-                        <AdminPanel />
                     </Main>
             </DisplayFrame>
         </LayoutBackground>
@@ -49,4 +48,5 @@ const Main = styled.div`
   justify-content: center;
   overflow: hidden;
   position: relative;
+  width: 100%;
 `

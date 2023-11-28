@@ -12,24 +12,18 @@ import {PanelButton} from "../../components/admin/PanelButton.jsx";
 import {Cart} from "../../components/order/Cart.jsx";
 
 export const OrderPage = () => {
-    const {store, resetContext} = useContext(StoreContext)
+    const {store, resetContext, openedCart} = useContext(StoreContext)
     const {adminMode} = useContext(AdminContext)
     const {user} = useContext(UserContext)
     const navigate = useNavigate()
-    const location = useLocation();
 
-    const state = location.state
-    const handleDisconnect = () => {
-        navigate('/')
-    }
     useEffect(() => {
         !user && navigate('/')
     }, [user, navigate]);
     return user && (
         <UberContainer>
             <Cart />
-            <CardContainer>
-
+            <CardContainer $openedCart={openedCart}>
                 {adminMode && store.length === 0 ? (
                     <EmptyStoreStyle>
                         <p>Il n'y a plus de produits disponibles ?</p>
@@ -47,7 +41,9 @@ export const OrderPage = () => {
                     ))
                 )}
             </CardContainer>
+            <AdminPanel />
         </UberContainer>
+
     )
 }
 
@@ -59,16 +55,30 @@ const UberContainer = styled.div`
 `
 
 const CardContainer = styled.div`
-  width: 75%;
-  padding: 50px;
+  width: ${props => props.$openedCart ? '100%' : '80%'};
+  padding: 75px;
+  margin-left: ${props => props.$openedCart ? '0%' : '20%'};
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: flex-start;
-  gap: 50px;
+  gap: 40px;
   flex-wrap: wrap;
   overflow: scroll;
   transition: all 400ms;
 `
+
+// const CardContainer = styled.div`
+//   width: ${props => props.$openedCart ? '100%' : '80%'};
+//   padding: 50px;
+//   margin-left: ${props => props.$openedCart ? '0%' : '20%'};
+//   display: grid;
+//   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+//   gap: 40px;
+//   justify-content: flex-start;
+//   align-items: flex-start;
+//   overflow: scroll;
+//   transition: all 400ms;
+// `;
 
 const EmptyStoreStyle = styled.div`
   height: 100%;

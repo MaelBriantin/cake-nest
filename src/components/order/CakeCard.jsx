@@ -6,14 +6,19 @@ import {TiDelete} from "react-icons/ti";
 import {useContext, useEffect, useState} from "react";
 import {AdminContext} from "../../context/AdminContext.jsx";
 import {StoreContext} from "../../context/StoreContext.jsx";
+import {CartContext} from "../../context/CartContext.jsx";
 
 export const CakeCard = (props) => {
     const {adminMode, setSelectedTab, setOpenedPanel} = useContext(AdminContext)
     const {store, setStore, selectedItem, setSelectedItem, resetSelectedItem} = useContext(StoreContext)
+    const {cart, setCart} = useContext(CartContext)
     const {image, title, price, id} = props
+    const [addFunctionOn, setAddFunctionOn] = useState(false)
 
     const isSelected = selectedItem.id === id
-    const handleAdminClick = () => {
+    const handleAdminClick = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
         if (adminMode) {
             setSelectedTab('edit')
             setOpenedPanel(false)
@@ -22,11 +27,34 @@ export const CakeCard = (props) => {
     }
 
     const handleDelete = () => {
-        const newStore = store.filter(item => item.id !== id)
+        const storeCopy = [...store]
+        const newStore = storeCopy.filter(item => item.id !== id)
         setStore(newStore)
         if(selectedItem.id === id) {
             setSelectedItem({})
         }
+        const cartCopy = [...cart]
+        setCart(cartCopy.filter(i => i.id !== id))
+    }
+    const addToCart = (item, e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        if (cart.some(i => i.id === item.id)) {
+            const cartCopy = [...cart]
+            cartCopy.map(i => {
+                if(i.id === item.id){
+                    i.quantity += 1
+                }
+            })
+            setCart(cartCopy)
+        } else {
+            const newItem = {
+                id: item.id,
+                quantity: 1
+            }
+            setCart([newItem, ...cart])
+        }
+        e.nativeEvent.stopImmediatePropagation();
     }
 
     return (
@@ -38,15 +66,17 @@ export const CakeCard = (props) => {
                     <CardTitle >{title}</CardTitle>
                     <CardSubTitle $isSelected={isSelected} $adminMode={adminMode}>
                         <p>{formatPrice(price)}</p>
-                        <Button adminMode={adminMode} isSelected={isSelected} style={'primary'} size={'small'} value={'Ajouter'} onClick={() => test()}></Button>
+                        <Button adminMode={adminMode} isSelected={isSelected} style={'primary'} size={'small'} value={'Ajouter'} onClick={() => addToCart({title, imageSource: image, id, price}, event)}></Button>
                     </CardSubTitle>
                 </BottomCard>
             </Card>
+            {/*<Button adminMode={adminMode} isSelected={isSelected} style={'primary'} size={'small'} value={'Ajouter'} onClick={() => addToCart({title, imageSource: image, id, price}, event)}></Button>*/}
         </CardContainer>
-
     )
 }
-
+const CardStyle = styled.div`
+  
+`
 const CardContainer = styled.div`
     position: relative;
   transition: all 400ms;
@@ -60,8 +90,8 @@ const RemoveButton = styled.div`
   font-size: ${theme.fonts.size.P4};
   color: ${props => props.$isSelected ? theme.colors.white : theme.colors.primary};
   position: absolute;
-  top: 2px;
-  right: 2px;
+  top: 5px;
+  right: 5px;
   cursor: pointer;
   width: fit-content;
   transition: all 200ms;
@@ -121,6 +151,7 @@ const CardSubTitle = styled.div`
     color: ${props => props.$isSelected && props.$adminMode ? theme.colors.white : theme.colors.primary};
     font-weight: ${theme.fonts.weights.regular};
   p{
+    margin-top: 8px;
     width: 150px;
     text-overflow: ellipsis;
     overflow: hidden;

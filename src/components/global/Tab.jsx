@@ -55,7 +55,7 @@ const OpenTabModel = styled.div`
   height: 40px;
   cursor: pointer;
   border-radius: ${theme.borderRadius.round} ${theme.borderRadius.round} 0 0;
-  border: 1px solid ${props => props.$openedPanel ? theme.colors.greyMedium : theme.colors.primary};
+  border: 1px solid ${props => props.$openedPanel ? theme.colors.greyMedium : theme.colors.greyMedium};
   background: ${props => !props.$openedPanel ? theme.colors.primary : theme.colors.background_white};
   color: ${props => !props.$openedPanel && theme.colors.white};
   &:hover{

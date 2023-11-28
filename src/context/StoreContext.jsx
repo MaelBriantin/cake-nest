@@ -7,12 +7,15 @@ export const StoreContext = createContext({
     resetContext: () => {},
     selectedItem: {},
     setSelectedItem: () => {},
-    resetSelectedItem: () => {}
+    resetSelectedItem: () => {},
+    openedCart: false,
+    setOpenedCart: () => {}
 });
 
 export const StoreProvider = ({ children }) => {
     const [store, setStore] = useState(fakeMenu2);
     const [selectedItem, setSelectedItem] = useState({})
+    const [openedCart, setOpenedCart] = useState(false)
 
     const resetContext = () => {
         setStore(fakeMenu2);
@@ -30,7 +33,9 @@ export const StoreProvider = ({ children }) => {
                 resetContext,
                 selectedItem,
                 setSelectedItem,
-                resetSelectedItem
+                resetSelectedItem,
+                openedCart,
+                setOpenedCart
             }}
         >
             {children}

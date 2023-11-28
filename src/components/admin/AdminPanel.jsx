@@ -8,9 +8,11 @@ import {MdEdit} from "react-icons/md";
 import {AddCakeForm} from "./AddCakeForm.jsx";
 import {EditCakeForm} from "./EditCakeForm.jsx";
 import {UserContext} from "../../context/UserContext.jsx";
+import {StoreContext} from "../../context/StoreContext.jsx";
 export const AdminPanel = () => {
     const {user, color, setColor} = useContext(UserContext)
     const {openedPanel, setOpenedPanel, adminMode, selectedTab, setSelectedTab} = useContext(AdminContext)
+    const {openedCart, setOpenedCart} = useContext(StoreContext)
     const [selectedAdd, setSelectedAdd] = useState(false)
     const [selectedModify, setSelectedModify] = useState(false)
     const [count, setCount] = useState(0)
@@ -49,7 +51,7 @@ export const AdminPanel = () => {
         return () => clearInterval(interval);
     }, [count, setCount]);
     return (
-        <Panel $openedPanel={openedPanel} $adminMode={adminMode}>
+        <Panel $openedPanel={openedPanel} $adminMode={adminMode} $openedCart={openedCart}>
             <Tabs>
                 <Tab openTab={true} />
                 <Tab value={'Ajouter'} onClick={() => handleAdd()} icon={<IoMdAdd />} isSelected={selectedAdd}/>
@@ -77,10 +79,10 @@ const Panel = styled.div`
   z-index: 3;
   bottom: 0;
   right: 0;
-  height: 400px;
-  width: 85%;
+  height: 350px;
+  width: ${props => props.$openedCart ? '100%' : '80%'};
   transition: all 400ms;
-  transform: translateY(${props => props.$openedPanel ? "90%" : "0%"});
+  transform: translateY(${props => props.$openedPanel ? "100%" : "0%"});
 `
 
 const Tabs = styled.div`
@@ -90,6 +92,9 @@ const Tabs = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  position: absolute;
+  top: -40px;
+  left: 0;
 `
 
 const Content = styled.div`

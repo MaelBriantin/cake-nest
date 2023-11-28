@@ -10,7 +10,7 @@ import {HiCursorClick} from "react-icons/hi";
 export function EditCakeForm() {
     const {selectedItem, store, setStore, setSelectedItem} = useContext(StoreContext)
     useEffect(() => {
-        console.log(selectedItem)
+        //console.log(selectedItem)
     }, [selectedItem, setSelectedItem]);
     const handleChangeTitle = (e) => {
         const storeCopy = [...store]
@@ -43,9 +43,9 @@ export function EditCakeForm() {
     }
     const deleteElement = () => {
         setSelectedItem({})
-        console.log(selectedItem)
+        // console.log(selectedItem)
     }
-    console.log(selectedItem.price)
+    //console.log(selectedItem.price)
     return (
         Object.keys(selectedItem).length !== 0 ? (
             <Form>
