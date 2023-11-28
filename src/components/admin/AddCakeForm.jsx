@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import {theme} from "../../theme/index.js";
-import {useContext, useEffect, useState} from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import {Input} from "../global/Input.jsx";
 import {GiCupcake} from "react-icons/gi";
 import {FaCamera, FaEuroSign, FaRegCheckCircle} from "react-icons/fa";
@@ -8,6 +8,7 @@ import {PanelButton} from "./PanelButton.jsx";
 import {Alert} from "../global/Alert.jsx";
 import {isNumeric} from "../../utils/maths.js";
 import {StoreContext} from "../../context/StoreContext.jsx";
+import {AdminContext} from "../../context/AdminContext.jsx";
 
 export function AddCakeForm() {
     const [addedCake, setAddedCake] = useState(false)
@@ -74,7 +75,7 @@ export function AddCakeForm() {
         <Form>
             <Image>{newCake.imageSource === '' ? 'Aucune image' : <img src={newCake.imageSource} alt={'Il y a un problème avec votre image'}/>}</Image>
             <Fields>
-                <Input placeholder={'Nom du produit'} width={'300'} icon={<GiCupcake />} onInput={() => handleChangeName(event)} error={error.title} value={newCake.title}/>
+                <Input firstInput placeholder={'Nom du produit'} width={'300'} icon={<GiCupcake />} onInput={() => handleChangeName(event)} error={error.title} value={newCake.title}/>
                 <Input placeholder={'Lien url d\'une image (ex: https://la-photo-de-mo-produit.png)' } width={'650'} icon={<FaCamera />} onInput={() => handleChangeUrl(event)} error={error.imageSource} value={newCake.imageSource}/>
                 <Input placeholder={'Prix'} width={'150'} icon={<FaEuroSign />} type={'number'} onInput={() => handleChangePrice(event)} error={error.price} value={newCake.price}/>
                 <Validation>

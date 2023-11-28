@@ -27,7 +27,6 @@ export const Cart = () => {
             total += i.price * i.cartQuantity
             cartSize += i.cartQuantity
     })
-    console.log(cartSize)
     return (
         <CartContainer $opened={openedCart}>
             <CartHeader >
@@ -63,13 +62,8 @@ const CartContainer = styled.div`
   height: 100%;
   box-shadow: ${theme.shadows.card};
   font-family: 'Pacifico', 'sans-serif';
-  color: ${theme.colors.greyMedium};
   transition: all 400ms;
-  //overflow: scroll;
   ${props => props.$opened && 'transform: translateX(-100%);'};
-  //position: absolute;
-  //top: 0;
-  //left: 0;
 `
 const ToggleCart = styled.div`
     padding: 10px;

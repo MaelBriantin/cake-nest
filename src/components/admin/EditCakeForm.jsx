@@ -22,7 +22,7 @@ export function EditCakeForm() {
         setStore(storeCopy)
     }
     const handleChangeUrl = (e) => {
-        if(selectedItem !== {}) {
+        if(Object.keys(selectedItem).length !== 0) {
             const storeCopy = [...store]
             storeCopy.map(i => {
                 if (i.id === selectedItem.id) {
@@ -53,7 +53,7 @@ export function EditCakeForm() {
                     {selectedItem.imageSource === '' ? 'Aucune image' : <img src={selectedItem.imageSource} alt={'Il y a un problème avec votre image'} />}
                 </Image>
                 <Fields>
-                    <Input placeholder={'Nom du produit'} width={'300'} icon={<GiCupcake />} value={selectedItem.title || ''} onInput={() => handleChangeTitle(event)} />
+                    <Input firstInput placeholder={'Nom du produit'} width={'300'} icon={<GiCupcake />} value={selectedItem.title || ''} onInput={() => handleChangeTitle(event)} />
                     <Input placeholder={'Lien url d\'une image (ex: https://la-photo-de-mo-produit.png)'} width={'650'} icon={<FaCamera />} value={selectedItem.imageSource || ''} onInput={() => handleChangeUrl(event)} />
                     <Input placeholder={'Prix'} width={'150'} icon={<FaEuroSign />} type={'number'} value={selectedItem.price} onInput={() => handleChangePrice(event)} />
                     <p>Cliquer sur le produit pour le modifier en <u>temps réel</u></p>

@@ -66,11 +66,11 @@ export const CakeCard = (props) => {
                     <CardTitle >{title}</CardTitle>
                     <CardSubTitle $isSelected={isSelected} $adminMode={adminMode}>
                         <p>{formatPrice(price)}</p>
-                        <Button adminMode={adminMode} isSelected={isSelected} style={'primary'} size={'small'} value={'Ajouter'} onClick={() => addToCart({title, imageSource: image, id, price}, event)}></Button>
+                        {/*<Button adminMode={adminMode} isSelected={isSelected} style={'primary'} size={'small'} value={'Ajouter'} onClick={() => addToCart({title, imageSource: image, id, price}, event)}></Button>*/}
                     </CardSubTitle>
                 </BottomCard>
             </Card>
-            {/*<Button adminMode={adminMode} isSelected={isSelected} style={'primary'} size={'small'} value={'Ajouter'} onClick={() => addToCart({title, imageSource: image, id, price}, event)}></Button>*/}
+            <Button adminMode={adminMode} isSelected={isSelected} style={'primary'} size={'small'} value={'Ajouter'} onClick={() => addToCart({title, imageSource: image, id, price}, event)}></Button>
         </CardContainer>
     )
 }
@@ -97,7 +97,7 @@ const RemoveButton = styled.div`
   transition: all 200ms;
   z-index: 2;
   &:hover {
-    color: ${theme.colors.redSecondary};
+    color: ${theme.colors.red};
   }
 `
 
