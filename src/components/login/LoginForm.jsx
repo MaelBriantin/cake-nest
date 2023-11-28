@@ -27,12 +27,12 @@ export const LoginForm = () => {
 
     }
     return (
-        <Form>
+        <Form action={''}>
             <Input>
                 <InputIcon><MdAccountCircle /></InputIcon>
                 <InputField onChange={handleInputChange} placeholder="Entrez votre prénom..." type="text" value={user} required />
             </Input>
-            <PrimaryButton onClick={handleConnection}>Mon espace <MdKeyboardArrowRight style={{marginTop: '4px'}} /></PrimaryButton>
+            <PrimaryButton type={'submit'} onClick={() => handleConnection(event)}>Mon espace <MdKeyboardArrowRight style={{marginTop: '4px'}} /></PrimaryButton>
         </Form>
     )
 }

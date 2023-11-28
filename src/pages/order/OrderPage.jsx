@@ -24,18 +24,22 @@ export const OrderPage = () => {
         <UberContainer>
             <Cart />
             <CardContainer $openedCart={openedCart}>
-                {adminMode && store.length === 0 ? (
+                {adminMode && store.length === 0 && (
                     <EmptyStoreStyle>
                         <p>Il n'y a plus de produits disponibles ?</p>
                         <p>Cliquez ci-dessous pour les réinitialiser</p>
                         <PanelButton primary text={'Générer de nouveaux gateaux'} onClick={() => resetContext()} />
                     </EmptyStoreStyle>
-                ) : store.length === 0 ? (
+                )}
+
+                { store.length === 0 && (
                     <EmptyStoreStyle>
                         <p>Victime de notre succès</p>
                         <p>De nouvelles recettes sont en préparation, revenez vite !</p>
                     </EmptyStoreStyle>
-                ) : (
+                )}
+
+                { store.length > 0 && (
                     store.map((e) => (
                         <CakeCard title={e.title} image={e.imageSource} price={e.price} id={e.id} key={e.id} />
                     ))

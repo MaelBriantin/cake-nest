@@ -1,12 +1,22 @@
 import styled from "styled-components";
 import {theme} from "../../theme/index.js";
+import {useContext, useEffect, useRef} from "react";
+import {AdminContext} from "../../context/AdminContext.jsx";
+import {StoreContext} from "../../context/StoreContext.jsx";
 
 export function Input(props) {
-    const {placeholder, icon, width, type, value, onInput, error } = props
+    const {placeholder, icon, width, type, value, onInput, error, firstInput } = props
+    const {selectedTab, setSelectedTab} = useContext(AdminContext)
+    const {selectedItem, setSelectedItem} = useContext(StoreContext)
+    const inputRef = useRef(null);
+    useEffect(() => {
+       firstInput && setTimeout(() =>
+           inputRef.current.focus(), 400)
+    }, [selectedItem]);
     return (
         <InputStyle $width={width} $error={error}>
             <span>{icon}</span>
-            <input placeholder={placeholder} type={type ? type : 'text'} onInput={() => onInput(event)} value={value}/>
+            <input ref={inputRef} placeholder={placeholder} type={type ? type : 'text'} onInput={() => onInput(event)} value={value}/>
         </InputStyle>
     )
 }
