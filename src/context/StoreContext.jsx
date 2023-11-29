@@ -9,13 +9,16 @@ export const StoreContext = createContext({
     setSelectedItem: () => {},
     resetSelectedItem: () => {},
     openedCart: false,
-    setOpenedCart: () => {}
+    setOpenedCart: () => {},
+    isAdd: null,
+    setIsAdd: () => {}
 });
 
 export const StoreProvider = ({ children }) => {
     const [store, setStore] = useState(fakeMenu2);
     const [selectedItem, setSelectedItem] = useState({})
     const [openedCart, setOpenedCart] = useState(false)
+    const [isAdd, setIsAdd] = useState(null)
 
     const resetContext = () => {
         setStore(fakeMenu2);
@@ -35,7 +38,9 @@ export const StoreProvider = ({ children }) => {
                 setSelectedItem,
                 resetSelectedItem,
                 openedCart,
-                setOpenedCart
+                setOpenedCart,
+                isAdd,
+                setIsAdd
             }}
         >
             {children}

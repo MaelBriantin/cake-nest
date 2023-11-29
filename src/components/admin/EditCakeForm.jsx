@@ -6,6 +6,7 @@ import {FaCamera, FaEuroSign, FaRegCheckCircle} from "react-icons/fa";
 import {GiCupcake} from "react-icons/gi";
 import {theme} from "../../theme/index.js";
 import {HiCursorClick} from "react-icons/hi";
+import {FiBox} from "react-icons/fi";
 
 export function EditCakeForm() {
     const {selectedItem, store, setStore, setSelectedItem} = useContext(StoreContext)
@@ -41,11 +42,15 @@ export function EditCakeForm() {
         })
         setStore(storeCopy)
     }
-    const deleteElement = () => {
-        setSelectedItem({})
-        // console.log(selectedItem)
+    const toggleAvailable = () => {
+        const storeCopy = [...store]
+        storeCopy.map(i => {
+            if (i.id === selectedItem.id) {
+                i.isAvailable = !i.isAvailable
+            }
+        })
+        setStore(storeCopy)
     }
-    //console.log(selectedItem.price)
     return (
         Object.keys(selectedItem).length !== 0 ? (
             <Form>
@@ -53,9 +58,18 @@ export function EditCakeForm() {
                     {selectedItem.imageSource === '' ? 'Aucune image' : <img src={selectedItem.imageSource} alt={'Il y a un problème avec votre image'} />}
                 </Image>
                 <Fields>
-                    <Input firstInput placeholder={'Nom du produit'} width={'300'} icon={<GiCupcake />} value={selectedItem.title || ''} onInput={() => handleChangeTitle(event)} />
-                    <Input placeholder={'Lien url d\'une image (ex: https://la-photo-de-mo-produit.png)'} width={'650'} icon={<FaCamera />} value={selectedItem.imageSource || ''} onInput={() => handleChangeUrl(event)} />
-                    <Input placeholder={'Prix'} width={'150'} icon={<FaEuroSign />} type={'number'} value={selectedItem.price} onInput={() => handleChangePrice(event)} />
+                    <Input firstInput placeholder={'Nom du produit'} width={'300'} icon={<GiCupcake />} value={selectedItem.title || ''} onInput={(e) => handleChangeTitle(e)} />
+                    <Input placeholder={'Lien url d\'une image (ex: https://la-photo-de-mo-produit.png)'} width={'650'} icon={<FaCamera />} value={selectedItem.imageSource || ''} onInput={(e) => handleChangeUrl(e)} />
+                    <PriceToggle><Input placeholder={'Prix'} width={'150'} icon={<FaEuroSign />} type={'number'} value={selectedItem.price} onInput={(e) => handleChangePrice(e)} />
+                        <AvailableToggle onClick={toggleAvailable} $isAvailable={selectedItem.isAvailable}>
+                            {
+                                selectedItem.isAvailable && <p><FiBox className={'icon'}/> En stock</p>
+                            }
+                            {
+                                !selectedItem.isAvailable && <p><FiBox className={'icon'}/> En rupture</p>
+                            }
+                        </AvailableToggle>
+                    </PriceToggle>
                     <p>Cliquer sur le produit pour le modifier en <u>temps réel</u></p>
                 </Fields>
             </Form>
@@ -67,6 +81,33 @@ export function EditCakeForm() {
     );
 }
 
+const PriceToggle = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+`
+
+const AvailableToggle = styled.div`
+  cursor: pointer;
+  width: 150px;
+  height: 44px;
+  background: ${ props => props.$isAvailable ?  theme.colors.primary : theme.colors.greyLight};
+  border-radius: ${ theme.borderRadius.round};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  p{
+    color: ${ props => props.$isAvailable ? theme.colors.white : theme.colors.greyDark}!important;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+`
 
 const Form = styled.div`
   height: 70%;

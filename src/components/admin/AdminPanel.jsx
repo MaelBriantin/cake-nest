@@ -12,7 +12,7 @@ import {StoreContext} from "../../context/StoreContext.jsx";
 export const AdminPanel = () => {
     const {user, color, setColor} = useContext(UserContext)
     const {openedPanel, setOpenedPanel, adminMode, selectedTab, setSelectedTab} = useContext(AdminContext)
-    const {openedCart, setOpenedCart} = useContext(StoreContext)
+    const {openedCart} = useContext(StoreContext)
     const [selectedAdd, setSelectedAdd] = useState(false)
     const [selectedModify, setSelectedModify] = useState(false)
     const [count, setCount] = useState(0)
@@ -42,7 +42,6 @@ export const AdminPanel = () => {
     useEffect(() => {
         let interval;
         if (count === 10) {
-            // Démarrer l'intervalle seulement si count est inférieur à 10
             interval = setInterval(() => {
                 const randomColor = Math.floor(Math.random() * 16777215).toString(16);
                 setColor(`#${'0'.repeat(6 - randomColor.length)}${randomColor}`);

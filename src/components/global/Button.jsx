@@ -6,6 +6,7 @@ import {CartContext} from "../../context/CartContext.jsx";
 
 export const Button = (props) => {
     const primary = props?.style === 'primary';
+    const disable = props?.style === 'disable';
     const {value, onClick, size, isSelected, adminMode} = props;
 
     if (primary) {
@@ -18,6 +19,8 @@ export const Button = (props) => {
         else {
             return <PrimaryButtonStyle onClick={onClick}>{value}</PrimaryButtonStyle>
         }
+    } else if (disable) {
+        return <SmallDisableButtonStyle $adminMode={adminMode} $isSelected={isSelected}>{value}</SmallDisableButtonStyle>
     } else {
         return <BasicButtonStyle onClick={onClick}>{value}</BasicButtonStyle>
     }
@@ -64,15 +67,34 @@ const SmallPrimaryButtonStyle = styled.div`
   cursor: pointer;
   border-radius: ${theme.borderRadius.round};
   border: solid 1px ${theme.colors.primary};
-  position: absolute;
-  bottom: 35px;
-  right: 10px;
+  //position: absolute;
+  //bottom: 35px;
+  //right: 10px;
   
   &:hover {
     border: solid 1px ${props => props.$isSelected && props.$adminMode ? theme.colors.white : theme.colors.primary};
     background: ${props => props.$isSelected && props.$adminMode ? theme.colors.primary : theme.colors.white};
     color: ${props => props.$isSelected && props.$adminMode ? theme.colors.white : theme.colors.primary};
   }
+`
+
+const SmallDisableButtonStyle = styled.div`
+  user-select: none;
+  width: 75px;
+  height: 30px;
+  text-decoration: none;
+  //background: ${theme.colors.primary};
+  background: ${theme.colors.white};
+  color: ${theme.colors.greyDark};
+  transition: 200ms all;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: ${theme.fonts.size.XXS};
+  font-weight: ${theme.fonts.weights.semiBold};
+  font-family: 'Open Sans', 'serif';
+  border-radius: ${theme.borderRadius.round};
+  border: solid 1px ${theme.colors.greyMedium};
 `
 
 const BasicButtonStyle = styled.div`

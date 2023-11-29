@@ -1,8 +1,7 @@
-import {useLocation, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {useContext, useEffect} from "react";
 import {CakeCard} from "../../components/order/CakeCard.jsx";
 import styled from "styled-components";
-import {fakeMenu2} from "../../store/cakes/cakes.js"
 import {AdminPanel} from "../../components/admin/AdminPanel.jsx";
 import {StoreContext} from "../../context/StoreContext.jsx";
 import {UserContext} from "../../context/UserContext.jsx";
@@ -58,31 +57,31 @@ const UberContainer = styled.div`
   width: 100%;
 `
 
-const CardContainer = styled.div`
-  width: ${props => props.$openedCart ? '100%' : '80%'};
-  padding: 75px;
-  margin-left: ${props => props.$openedCart ? '0%' : '20%'};
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 40px;
-  flex-wrap: wrap;
-  overflow: scroll;
-  transition: all 400ms;
-`
-
 // const CardContainer = styled.div`
 //   width: ${props => props.$openedCart ? '100%' : '80%'};
-//   padding: 50px;
+//   padding: 75px;
 //   margin-left: ${props => props.$openedCart ? '0%' : '20%'};
-//   display: grid;
-//   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-//   gap: 40px;
+//   display: flex;
 //   justify-content: flex-start;
 //   align-items: flex-start;
+//   gap: 40px;
+//   flex-wrap: wrap;
 //   overflow: scroll;
 //   transition: all 400ms;
-// `;
+// `
+
+const CardContainer = styled.div`
+  width: ${props => props.$openedCart ? '100%' : '80%'};
+  padding: 50px;
+  margin-left: ${props => props.$openedCart ? '0%' : '20%'};
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 40px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  overflow: scroll;
+  transition: all 400ms;
+`;
 
 const EmptyStoreStyle = styled.div`
   height: 100%;

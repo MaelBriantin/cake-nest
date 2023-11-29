@@ -29,6 +29,11 @@ footer, header, hgroup, menu, nav, section {
   display: block;
 }
 body {
+  ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    background: transparent; /* make scrollbar transparent */
+  }
   line-height: 1;
   overflow: hidden;
   font-family: 'Open Sans', 'sans-serif';
