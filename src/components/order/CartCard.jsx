@@ -2,7 +2,7 @@ import {styled, keyframes} from "styled-components";
 import {theme} from "../../theme/index.js";
 import {MdDeleteForever} from "react-icons/md";
 import {formatPrice} from "../../utils/maths.js";
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {CartContext} from "../../context/CartContext.jsx";
 import defaultImage from "../../../public/images/cupcake-item.png"
 import {StoreContext} from "../../context/StoreContext.jsx";
@@ -10,32 +10,43 @@ import {AdminContext} from "../../context/AdminContext.jsx";
 
 export const CartCard = (props) => {
     const {cart, setCart} = useContext(CartContext)
-    const {adminMode} = useContext(AdminContext)
+    const {adminMode, setSelectedTab, setOpenedPanel} = useContext(AdminContext)
+    const {isAdd, setIsAdd} = useContext(StoreContext)
     const [removed, setRemoved] = useState(false)
     const {item} = props;
     const {imageSource, title, price, cartQuantity, id} = item;
     const {selectedItem, setSelectedItem, store} = useContext(StoreContext)
-    const deleteFromCart = () => {
+    const deleteFromCart = (e) => {
+        e.preventDefault()
+        e.stopPropagation()
         setRemoved(true)
         setTimeout(() => {
             const cartCopy = [...cart]
             setCart(cartCopy.filter(i => i.id !== id))
-        }, 400)
+        }, 350)
     }
-    const selectElement = () => {
-        setSelectedItem(store.find(i => i.id === id))
+    const selectElement = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        if (adminMode) {
+            setSelectedTab('edit')
+            setOpenedPanel(false)
+            setSelectedItem(store.find(i => i.id === id))
+        }
     }
+    const isAvailable = store.find(i => i.id === id).isAvailable
     const isSelected = selectedItem.id === id && adminMode
     return (
-        <CartCardStyle $removed={removed} $isSelected={isSelected} $admin={adminMode} onClick={() => selectElement()}>
+        <CartCardStyle $removed={removed} $isSelected={isSelected} $admin={adminMode} onClick={(e) => selectElement(e)}>
             <CartCardImage>
                 <img src={imageSource || defaultImage} alt={''} />
             </CartCardImage>
             <TitlePrice $isSelected={isSelected}>
                 <h1>{title}</h1>
-                <p className={'price'}>{formatPrice(price * cartQuantity)}</p>
+                { isAvailable && (<p className={'price'}>{formatPrice(price * cartQuantity)}</p>) }
+                { !isAvailable && (<p className={'price'}>Non disponible</p>) }
             </TitlePrice>
-            <QuantityDelete onClick={deleteFromCart} className={'qtyDelete'}  $isSelected={isSelected}>
+            <QuantityDelete className={'qtyDelete'}  $isSelected={isSelected}>
                 x {cartQuantity}
             </QuantityDelete>
             <DeleteBtn onClick={deleteFromCart} className={'delete'}>
@@ -47,15 +58,16 @@ export const CartCard = (props) => {
 
 
 const AddKeyframe = keyframes`
-  0% { transform: translateX(-200%); opacity: 0 }
-  50% { opacity: 0.5 }
+  0% { transform: translateX(100%); opacity: 0 }
+  50% { opacity: 0.25 }
+  75% { opacity: 0.5 }
   100% { transform: translateX(0) ; opacity: 1 }
 `
 
 const DeleteKeyframe = keyframes`
   0% { transform: translateX(0%); opacity: 1 }
-  50% { opacity: 0.5 }
-  100% { transform: translateX(-200%) ; opacity: 0 }
+  50% { opacity: 0 }
+  100% { transform: translateX(-100%) ; opacity: 0 }
 `
 
 const CartCardImage = styled.div`
@@ -83,7 +95,7 @@ const CartCardStyle = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: all 400ms;
+  transition: all 200ms;
   ${props => props.$admin && 'cursor: pointer'};
   &:hover{
     transform: scale(1.05);
@@ -91,7 +103,7 @@ const CartCardStyle = styled.div`
   &:hover .delete{
     transform: translateX(0);
   }
-  animation: 400ms ${props => props.$removed ? DeleteKeyframe : AddKeyframe} ease-in-out;
+  animation: 400ms ${props => props.$removed ? DeleteKeyframe : AddKeyframe} linear;
 `
 
 const TitlePrice = styled.div`
@@ -134,7 +146,7 @@ const DeleteBtn = styled.div`
   position: absolute;
   top: 0;
   right: 0;
-  transition: all 400ms;
+  transition: all 200ms;
   cursor: pointer;
   color: ${theme.colors.white};
   font-size: ${theme.fonts.size.P3};

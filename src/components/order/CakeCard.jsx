@@ -3,19 +3,20 @@ import {theme} from "../../theme/index.js";
 import {Button} from "../global/Button.jsx";
 import {formatPrice} from "../../utils/maths.js"
 import {TiDelete} from "react-icons/ti";
-import {useContext, useEffect, useState} from "react";
+import {useContext} from "react";
 import {AdminContext} from "../../context/AdminContext.jsx";
 import {StoreContext} from "../../context/StoreContext.jsx";
 import {CartContext} from "../../context/CartContext.jsx";
 
 export const CakeCard = (props) => {
     const {adminMode, setSelectedTab, setOpenedPanel} = useContext(AdminContext)
-    const {store, setStore, selectedItem, setSelectedItem, resetSelectedItem} = useContext(StoreContext)
+    const {store, setStore, selectedItem, setSelectedItem, setIsAdd} = useContext(StoreContext)
     const {cart, setCart} = useContext(CartContext)
     const {image, title, price, id} = props
-    const [addFunctionOn, setAddFunctionOn] = useState(false)
 
     const isSelected = selectedItem.id === id
+    const isAvailable = store.find(i => i.id === id).isAvailable
+    console.log(isAvailable)
     const handleAdminClick = (e) => {
         e.stopPropagation();
         e.preventDefault();
@@ -26,7 +27,9 @@ export const CakeCard = (props) => {
         }
     }
 
-    const handleDelete = () => {
+    const handleDelete = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
         const storeCopy = [...store]
         const newStore = storeCopy.filter(item => item.id !== id)
         setStore(newStore)
@@ -50,35 +53,39 @@ export const CakeCard = (props) => {
         } else {
             const newItem = {
                 id: item.id,
-                quantity: 1
+                quantity: 1,
+                addedAt: Date.now(),
+                animate: true
             }
             setCart([newItem, ...cart])
+            setIsAdd(newItem)
         }
-        e.nativeEvent.stopImmediatePropagation();
     }
 
     return (
-        <CardContainer $adminMode={adminMode}>
-            {adminMode && <RemoveButton $isSelected={isSelected} onClick={() => handleDelete(event)}><TiDelete/></RemoveButton>}
-            <Card $adminMode={adminMode} $isSelected={isSelected} onClick={() => handleAdminClick(event)} >
+        <CardContainer $adminMode={adminMode}  >
+            <Card $isAvailable={isAvailable} $adminMode={adminMode} $isSelected={isSelected} onClick={(e) => handleAdminClick(e)} >
+                {adminMode && <RemoveButton $isSelected={isSelected} onClick={(e) => handleDelete(e)}><TiDelete/></RemoveButton>}
                 <CardImage  ><img src={image} alt={''}/></CardImage>
                 <BottomCard $adminMode={adminMode}>
                     <CardTitle >{title}</CardTitle>
-                    <CardSubTitle $isSelected={isSelected} $adminMode={adminMode}>
+                    <CardSubTitle $isSelected={isSelected} $adminMode={adminMode} $isAvailable={isAvailable}>
                         <p>{formatPrice(price)}</p>
-                        {/*<Button adminMode={adminMode} isSelected={isSelected} style={'primary'} size={'small'} value={'Ajouter'} onClick={() => addToCart({title, imageSource: image, id, price}, event)}></Button>*/}
+                        {
+                            isAvailable && (<Button adminMode={adminMode} isSelected={isSelected} style={'primary'} size={'small'} value={'Ajouter'} onClick={(e) => addToCart({title, imageSource: image, id, price}, e)}></Button>)
+                        }
+                        {
+                            !isAvailable && (<Button adminMode={adminMode} isSelected={isSelected} style={'disable'} size={'small'} value={'En rupture'}></Button>)
+                        }
                     </CardSubTitle>
                 </BottomCard>
             </Card>
-            <Button adminMode={adminMode} isSelected={isSelected} style={'primary'} size={'small'} value={'Ajouter'} onClick={() => addToCart({title, imageSource: image, id, price}, event)}></Button>
+            {/*<Button adminMode={adminMode} isSelected={isSelected} style={'primary'} size={'small'} value={'Ajouter'} onClick={(e) => addToCart({title, imageSource: image, id, price}, e)}></Button>*/}
         </CardContainer>
     )
 }
-const CardStyle = styled.div`
-  
-`
+
 const CardContainer = styled.div`
-    position: relative;
   transition: all 400ms;
   &:hover{
     ${props => props.$adminMode && 'transform: scale(1.1)'};
@@ -89,11 +96,16 @@ const CardContainer = styled.div`
 const RemoveButton = styled.div`
   font-size: ${theme.fonts.size.P4};
   color: ${props => props.$isSelected ? theme.colors.white : theme.colors.primary};
-  position: absolute;
-  top: 5px;
-  right: 5px;
+  //position: absolute;
+  //top: 5px;
+  //right: 5px;
+  position: relative;
   cursor: pointer;
-  width: fit-content;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  height: 1px;
   transition: all 200ms;
   z-index: 2;
   &:hover {
@@ -103,19 +115,15 @@ const RemoveButton = styled.div`
 
 const Card = styled.div`
   user-select: none;
-  //position: relative;
   align-items: center;
   border-radius: ${theme.borderRadius.extraRound};
   padding: 10px;
     height: 300px;
     width: 200px;
     background: ${props => props.$isSelected && props.$adminMode ? theme.colors.primary : theme.colors.background_white};
+    opacity: ${props => props.$isAvailable ? '1' : '0.3'};
     box-shadow: ${theme.shadows.card};
-  // transition: all 400ms;
-  // &:hover{
-  //   ${props => props.$adminMode && 'transform: scale(1.1)'};
-  //   ${props => props.$adminMode && 'cursor: pointer'};
-  // }
+  
 `
 
 const CardImage = styled.div`
@@ -155,6 +163,7 @@ const CardSubTitle = styled.div`
     width: 150px;
     text-overflow: ellipsis;
     overflow: hidden;
+    ${props => !props.$isAvailable && 'text-decoration-line: line-through'};
   }
 `
 

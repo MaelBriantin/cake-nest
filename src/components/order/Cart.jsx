@@ -1,32 +1,40 @@
 import styled from "styled-components";
 import {theme} from "../../theme/index.js";
-import {useContext, useEffect, useState} from "react";
+import {useContext, useState} from "react";
 import {IoMdCart} from "react-icons/io";
 import {CartCard} from "./CartCard.jsx";
 import {CartContext} from "../../context/CartContext.jsx";
 import {StoreContext} from "../../context/StoreContext.jsx";
 import {formatPrice} from "../../utils/maths.js";
+import {AdminContext} from "../../context/AdminContext.jsx";
 
 export const Cart = () => {
-    const [opened, setOpened] = useState(false)
-    const {cart, setCart} = useContext(CartContext)
-    const {store, setStore, setOpenedCart, openedCart} = useContext(StoreContext)
+    const {cart} = useContext(CartContext)
+    const {store, setOpenedCart, openedCart} = useContext(StoreContext)
+    const {adminMode} = useContext(AdminContext)
     const toggleOpened = () => {
         setOpenedCart(!openedCart)
     }
-    //const actualCart = store.filter(i => cart.includes(i.id))
-    const storeCopy = [...store]
-    const actualCart = storeCopy.filter(item => {
-        if (cart.some(cartItem => cartItem.id === item.id)) {
-            return Object.assign(item, {cartQuantity: cart.find(i => i.id === item.id).quantity})
-        }
-    });
-    let total = 0;
-    let cartSize = 0
-    actualCart.map(i => {
-            total += i.price * i.cartQuantity
-            cartSize += i.cartQuantity
+    const actualCart = cart.map(e => {
+        const item = store.find(i => i.id === e.id)
+        const modifiedItem = Object.assign(item, {cartQuantity: cart.find(i => i.id === item.id).quantity})
+        return Object.assign(modifiedItem, {addedAt: cart.find(i => i.id === item.id).addedAt})
     })
+    let total = 0;
+    let cartSize = 0;
+    actualCart.map(i => {
+        if(adminMode) {
+            cartSize += i.cartQuantity
+        } else {
+            if (i.isAvailable) {
+                cartSize += i.cartQuantity
+            }
+        }
+        if (i.isAvailable) {
+            total += i.price * i.cartQuantity
+        }
+    })
+    actualCart.sort((a, b) => a.addedAt - b.addedAt)
     return (
         <CartContainer $opened={openedCart}>
             <CartHeader >
@@ -36,7 +44,20 @@ export const Cart = () => {
             <CartContent $opened={openedCart}>
                 <List>
                     {
-                        actualCart.length > 0 ? actualCart.map(item => <CartCard key={item.id} item={item}/>) : <NoCart>Aucun article dans le panier</NoCart>
+                        (adminMode && actualCart.length > 0) &&
+                            actualCart.map(item => <CartCard key={item.id} item={item}/>)
+                    }
+                    {
+                        (!adminMode && actualCart.length) > 0 &&
+                            actualCart.map(
+                            item => {
+                                if(item.isAvailable) {
+                                   return (<CartCard key={item.id} item={item}/>)
+                                }
+                            })
+                    }
+                    {
+                        actualCart === 0 && <NoCart>Aucun article dans le panier</NoCart>
                     }
                 </List>
             </CartContent>
@@ -75,9 +96,9 @@ const ToggleCart = styled.div`
     border-radius: 0 50% 50% 0;
     border: 2px solid ${theme.colors.primary};
     right: -35px;
-    top: 50%;
+    top: 45%;
     //transform: translateY(-45%);
-    height: 40px;
+    height: 50px;
     width: 40px;
     background: ${theme.colors.background_dark};
     color: ${props => props.$opened ? theme.colors.white : theme.colors.primary};
@@ -112,12 +133,13 @@ const CartHeader = styled.div`
   font-family: 'Pacifico', 'sans-serif';
   color: ${theme.colors.primary};
   font-size: ${theme.fonts.size.P3};
-  padding: 0 50px;
   height: 8%;
+  width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   overflow: hidden;
+  gap: 50%;
 `
 
 const CartContent = styled.div`
