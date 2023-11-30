@@ -6,7 +6,7 @@ import {Layout} from "./components/layouts/Layout.jsx";
 import {ContextProviders} from "./context/ContextProviders.jsx";
 import {LoginLayout} from "./components/layouts/LoginLayout.jsx";
 import {LoginPage} from "./pages/login/LoginPage.jsx";
-import {SigninPage} from "./pages/login/SigninPage.jsx";
+import {SignUpPage} from "./pages/login/SignUpPage.jsx";
 
 function App() {
     return (
@@ -15,10 +15,10 @@ function App() {
                     <Routes>
                         <Route element={<LoginLayout />}>
                             <Route path={'/'} element={<LoginPage />}/>
-                            <Route path={'/signin'} element={<SigninPage />}/>
+                            <Route path={'/signUp'} element={<SignUpPage />}/>
                         </Route>
                         {/*<Route path='/' element={<LoginPage/>}/>*/}
-                        {/*<Route path='/signin' element={<SigninPage/>}/>*/}
+                        {/*<Route path='/signin' element={<SignUpPage/>}/>*/}
                         <Route element={<Layout/>}>
                             <Route path={'order'} element={<OrderPage/>} />
                         </Route>

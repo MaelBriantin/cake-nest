@@ -10,7 +10,7 @@ import {CartContext} from "../../context/CartContext.jsx";
 
 export const CakeCard = (props) => {
     const {adminMode, setSelectedTab, setOpenedPanel} = useContext(AdminContext)
-    const {store, setStore, selectedItem, setSelectedItem, setIsAdd, deleteCake} = useContext(StoreContext)
+    const {store, setStore, selectedItem, setSelectedItem, deleteCake, setSync} = useContext(StoreContext)
     const {cart, setCart} = useContext(CartContext)
     const {image, title, price, id} = props
 
@@ -33,12 +33,13 @@ export const CakeCard = (props) => {
         const storeCopy = [...store]
         const newStore = storeCopy.filter(item => item.id !== id)
         setStore(newStore)
+        setSync(true)
         if(selectedItem.id === id) {
             setSelectedItem({})
         }
-        // const cartCopy = [...cart]
-        // setCart(cartCopy.filter(i => i.id !== id))
-        deleteCake(id)
+        const cartCopy = [...cart]
+        setCart(cartCopy.filter(i => i.id !== id))
+        //deleteCake(id)
     }
     const addToCart = (item, e) => {
         e.stopPropagation();
@@ -59,7 +60,6 @@ export const CakeCard = (props) => {
                 animate: true
             }
             setCart([newItem, ...cart])
-            setIsAdd(newItem)
         }
     }
 

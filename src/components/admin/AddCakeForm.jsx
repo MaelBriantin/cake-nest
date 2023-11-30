@@ -13,7 +13,7 @@ import {updateMenu} from "../../api/menu.js";
 
 export function AddCakeForm() {
     const [addedCake, setAddedCake] = useState(false)
-    const {store, setStore, addCake} = useContext(StoreContext)
+    const {store, setStore, addCake, setSync} = useContext(StoreContext)
     const emptyItem = {
         id: 0,
         imageSource: "",
@@ -67,8 +67,9 @@ export function AddCakeForm() {
             isAvailable: newCake.isAvailable,
             isAdvertised: newCake.isAdvertised,
         };
-        //setStore([cakeToAdd, ...store])
-        addCake(cakeToAdd)
+        setStore([cakeToAdd, ...store])
+        //addCake(cakeToAdd)
+        setSync(true)
         setAddedCake(true)
         setTimeout(() => setAddedCake(false), 2000)
         setNewCake(emptyItem)

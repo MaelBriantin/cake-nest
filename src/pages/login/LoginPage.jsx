@@ -57,8 +57,8 @@ export const LoginPage = () => {
                             id: userCredential.user.displayName
                         });
                         const menu = await getUserMenu(userCredential.user.uid)
-                        setStore(menu?.data.menu)
-                        setMenuId(menu?.id)
+                        setStore(menu.data.menu)
+                        setMenuId(menu.id)
                         navigate('/order')
                     })
                     .catch((error) => {
@@ -86,7 +86,7 @@ export const LoginPage = () => {
                 <PanelButton width={'200'} type={'submit'} loading={loading} text={'Se connecter'}
                              onClick={(e) => handleConnection(e)}/>
                 {/*<div className={'noAccount'}>Vous n'avez pas encore de compte ? */}
-                <span className={'signin'} onClick={() => navigate('/signin')}>Créer un compte</span>
+                <span className={'signUp'} onClick={() => navigate('/signUp')}>Créer un compte</span>
                 {/*</div>*/}
             </CreateAccountPageStyle>
         </>
@@ -124,13 +124,13 @@ const CreateAccountPageStyle = styled.form`
     color: ${theme.colors.white};
     gap: 10px;
   }
-  .signin{
+  .signUp{
     color: ${theme.colors.primary};
     cursor: pointer;
     transition: all 400ms;
     font-weight: ${theme.fonts.weights.semiBold};
   }
-  .signin:hover{
+  .signUp:hover{
     text-decoration: underline;
   }
 `

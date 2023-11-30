@@ -14,7 +14,7 @@ import {convertApiError} from "../../api/errors.js";
 import {createUserMenu, getUserMenu} from "../../api/menu.js";
 import {StoreContext} from "../../context/StoreContext.jsx";
 
-export const SigninPage = () => {
+export const SignUpPage = () => {
     const [userCreation, setUserCreation] = useState({
         email: '',
         password: '',
@@ -118,6 +118,7 @@ export const SigninPage = () => {
                 <Input placeholder={'Confirmer le mot de passe'} icon={<RiLockPasswordFill />} width={'400'} type={'password'} onInput={(e) => onHandleChange('confirmPassword', e)} value={userCreation.confirmPassword} />
                 <PanelButton width={'200'} type={'submit'} loading={loading} text={'Créer un compte'}
                               onClick={(e) => handleCreateAccount(e)}/>
+                <span className={'login'} onClick={() => navigate('/')}>Se connecter</span>
             </CreateAccountPageStyle>
         </>
     )
@@ -144,6 +145,15 @@ const CreateAccountPageStyle = styled.form`
     min-width: 200px;
     background: ${theme.colors.red};
     color: ${theme.colors.white};
+  }
+  .login{
+    color: ${theme.colors.primary};
+    cursor: pointer;
+    transition: all 400ms;
+    font-weight: ${theme.fonts.weights.semiBold};
+  }
+  .login:hover{
+    text-decoration: underline;
   }
 `
 

@@ -11,7 +11,6 @@ import {AdminContext} from "../../context/AdminContext.jsx";
 export const CartCard = (props) => {
     const {cart, setCart} = useContext(CartContext)
     const {adminMode, setSelectedTab, setOpenedPanel} = useContext(AdminContext)
-    const {isAdd, setIsAdd} = useContext(StoreContext)
     const [removed, setRemoved] = useState(false)
     const {item} = props;
     const {imageSource, title, price, cartQuantity, id} = item;
