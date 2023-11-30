@@ -62,7 +62,7 @@ export const AdminPanel = () => {
                     : selectedTab === 'edit'
                     ? <EditCakeForm/>
                         : <Default $color={color}>
-                            { count < 10 ? <p>Hey,&#x20;<span onClick={() => changeColor()}>{user}</span>&#x20;! Ça va ?</p>
+                            { count < 10 ? <p>Hey,&#x20;<span onClick={() => changeColor()}>{user.name}</span>&#x20;! Ça va ?</p>
                             : <p>IT'S&#x20;<span onClick={() => stopColor()}>RAINBOW</span>&#x20;TIME!!!</p>}
                         </Default>
                 }

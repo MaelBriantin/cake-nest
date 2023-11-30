@@ -24,7 +24,7 @@ export const UserInfos = (props) => {
         <Connection>
             <AdminToggle />
             <Infos>
-                <h1>Salut, <span>{user}</span> !</h1>
+                <h1>Salut, <span>{user.name}</span> !</h1>
                 <p onClick={() => handleDisconnect()}>Se déconnecter</p>
             </Infos>
             <Icon>

@@ -1,5 +1,5 @@
 import {Input} from "../global/Input.jsx";
-import {MdAccountCircle, MdAlternateEmail, MdErrorOutline} from "react-icons/md";
+import {MdAlternateEmail} from "react-icons/md";
 import {RiLockPasswordFill} from "react-icons/ri";
 import {styled} from "styled-components";
 import {PanelButton} from "../admin/PanelButton.jsx";
@@ -11,6 +11,8 @@ import {UserContext} from "../../context/UserContext.jsx";
 import {useNavigate} from "react-router-dom";
 import {LoginSubtitle} from "./LoginSubtitle.jsx";
 import {convertApiError} from "../../api/errors.js";
+import {getUserMenu} from "../../api/menu.js";
+import {StoreContext} from "../../context/StoreContext.jsx";
 
 export const Login = () => {
     const [userConnection, setUserConnection] = useState({
@@ -19,7 +21,8 @@ export const Login = () => {
     })
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
-    const {user, setUser} = useContext(UserContext)
+    const { setUser} = useContext(UserContext)
+    const {setStore} = useContext(StoreContext)
     const navigate = useNavigate()
     const onHandleChange = (type, e) => {
         switch (type) {
@@ -40,23 +43,27 @@ export const Login = () => {
         setTimeout(() => setError(''), 6000)
     }
     const handleConnection = (e) => {
+        setLoading(true)
         e.preventDefault()
         if (userConnection.password === '' || userConnection.email === '') {
             displayError('Veuillez remplir tous les champs du formulaire')
         }
         else {
-            setLoading(true)
             signInWithEmailAndPassword(auth, userConnection.email, userConnection.password)
-                .then((userCredential) => {
-                    setUser(userCredential.user.displayName);
-                    console.log(userCredential.user)
+                .then(async (userCredential) => {
+                    setUser({
+                        name: userCredential.user.displayName,
+                        id: userCredential.user.displayName
+                    });
+                    setStore(await getUserMenu(userCredential.user.uid))
                     navigate('/order')
                 })
                 .catch((error) => {
                     displayError(convertApiError(error.code))
+                    // displayError(error.code)
                 });
-            setLoading(false)
         }
+        setLoading(false)
     }
 
     return (

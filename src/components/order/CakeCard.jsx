@@ -65,7 +65,7 @@ export const CakeCard = (props) => {
     return (
         <CardContainer $adminMode={adminMode}  >
             <Card $isAvailable={isAvailable} $adminMode={adminMode} $isSelected={isSelected} onClick={(e) => handleAdminClick(e)} >
-                {adminMode && <RemoveButton $isSelected={isSelected} onClick={(e) => handleDelete(e)}><TiDelete/></RemoveButton>}
+                <RemoveButton $isSelected={isSelected}>{adminMode && <TiDelete className={'tiDelete'} onClick={(e) => handleDelete(e)} />}</RemoveButton>
                 <CardImage  ><img src={image} alt={''}/></CardImage>
                 <BottomCard $adminMode={adminMode}>
                     <CardTitle >{title}</CardTitle>
@@ -96,19 +96,22 @@ const CardContainer = styled.div`
 const RemoveButton = styled.div`
   font-size: ${theme.fonts.size.P4};
   color: ${props => props.$isSelected ? theme.colors.white : theme.colors.primary};
-  //position: absolute;
+  position: relative;
   //top: 5px;
   //right: 5px;
-  position: relative;
-  cursor: pointer;
+  //position: relative;
   width: 100%;
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
-  height: 1px;
+  height: 10px;
   transition: all 200ms;
-  z-index: 2;
-  &:hover {
+  .tiDelete{
+    cursor: pointer;
+    transition: all 200ms;
+    z-index: 2;
+  }
+  .tiDelete:hover{
     color: ${theme.colors.red};
   }
 `

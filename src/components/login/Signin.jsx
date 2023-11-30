@@ -1,9 +1,9 @@
 import {Input} from "../global/Input.jsx";
 import {MdAccountCircle, MdAlternateEmail} from "react-icons/md";
 import {RiLockPasswordFill} from "react-icons/ri";
-import {styled, keyframes} from "styled-components";
+import {styled} from "styled-components";
 import {PanelButton} from "../admin/PanelButton.jsx";
-import {useContext, useEffect, useState} from "react";
+import {useContext, useState} from "react";
 import {theme} from "../../theme/index.js";
 import { createUserWithEmailAndPassword, updateProfile, getAuth } from "firebase/auth";
 import {auth} from "../../api/auth.js";
@@ -11,6 +11,8 @@ import {UserContext} from "../../context/UserContext.jsx";
 import {useNavigate} from "react-router-dom";
 import {LoginSubtitle} from "./LoginSubtitle.jsx";
 import {convertApiError} from "../../api/errors.js";
+import {createUserMenu, getUserMenu} from "../../api/menu.js";
+import {StoreContext} from "../../context/StoreContext.jsx";
 
 export const Signin = () => {
     const [userCreation, setUserCreation] = useState({
@@ -20,7 +22,8 @@ export const Signin = () => {
         username: ''
     })
     const navigate = useNavigate()
-    const {user, setUser} = useContext(UserContext)
+    const {setUser} = useContext(UserContext)
+    const {setStore} = useContext(StoreContext)
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
     const onHandleChange = (type, e) => {
@@ -67,12 +70,20 @@ export const Signin = () => {
             createUserWithEmailAndPassword(auth, userCreation.email, userCreation.password)
                 .then((userCredential) => {
                     const user = userCredential.user;
+                    setUser({
+                        name: userCreation.username,
+                    });
                     //setUser(user);
                     updateProfile(user, {
                         displayName: userCreation.username
                     })
-                        .then(() => {
-                            setUser(userCreation.username)
+                        .then(async () => {
+                            setUser({
+                                name: user.displayName,
+                                id: user.uid
+                            });
+                            createUserMenu(user.uid)
+                            setStore(await getUserMenu(user.uid).then(r => r))
                             navigate('/order')
                         })
                         .catch((error) => {
@@ -81,6 +92,7 @@ export const Signin = () => {
                 })
                 .catch((error) => {
                     displayError(convertApiError(error.code))
+                    // displayError(error.code)
                 })
                 .finally(() => {
                     setLoading(false);
