@@ -7,12 +7,15 @@ import {StoreContext} from "../../context/StoreContext.jsx";
 export function Input(props) {
     const {placeholder, icon, width, type, value, onInput, error, firstInput } = props
     const {openedPanel} = useContext(AdminContext)
-    const {selectedItem} = useContext(StoreContext)
+    const {selectedItem, updateItem} = useContext(StoreContext)
     const inputRef = useRef(null);
     useEffect(() => {
        (firstInput && !openedPanel)  && setTimeout(() =>
            inputRef.current.focus(), 400)
-    }, [selectedItem]);
+        //inputRef.current.focus()
+        //updateItem(selectedItem.id, 'title', selectedItem.title)
+    }, [inputRef, selectedItem.id]);
+
     return (
         <InputStyle $width={width} $error={error}>
             <span>{icon}</span>

@@ -10,13 +10,13 @@ import {CartContext} from "../../context/CartContext.jsx";
 
 export const CakeCard = (props) => {
     const {adminMode, setSelectedTab, setOpenedPanel} = useContext(AdminContext)
-    const {store, setStore, selectedItem, setSelectedItem, setIsAdd} = useContext(StoreContext)
+    const {store, setStore, selectedItem, setSelectedItem, setIsAdd, deleteItem} = useContext(StoreContext)
     const {cart, setCart} = useContext(CartContext)
     const {image, title, price, id} = props
 
     const isSelected = selectedItem.id === id
     const isAvailable = store.find(i => i.id === id).isAvailable
-    console.log(isAvailable)
+    //console.log(isAvailable)
     const handleAdminClick = (e) => {
         e.stopPropagation();
         e.preventDefault();
@@ -32,6 +32,7 @@ export const CakeCard = (props) => {
         e.preventDefault();
         const storeCopy = [...store]
         const newStore = storeCopy.filter(item => item.id !== id)
+        deleteItem(id)
         setStore(newStore)
         if(selectedItem.id === id) {
             setSelectedItem({})

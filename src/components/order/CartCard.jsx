@@ -46,7 +46,7 @@ export const CartCard = (props) => {
                 { isAvailable && (<p className={'price'}>{formatPrice(price * cartQuantity)}</p>) }
                 { !isAvailable && (<p className={'price'}>Non disponible</p>) }
             </TitlePrice>
-            <QuantityDelete className={'qtyDelete'}  $isSelected={isSelected}>
+            <QuantityDelete onClick={deleteFromCart} className={'qtyDelete'}  $isSelected={isSelected}>
                 x {cartQuantity}
             </QuantityDelete>
             <DeleteBtn onClick={deleteFromCart} className={'delete'}>

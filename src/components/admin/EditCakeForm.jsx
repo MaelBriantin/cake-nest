@@ -7,13 +7,15 @@ import {GiCupcake} from "react-icons/gi";
 import {theme} from "../../theme/index.js";
 import {HiCursorClick} from "react-icons/hi";
 import {FiBox} from "react-icons/fi";
+import {Alert} from "../global/Alert.jsx";
 
 export function EditCakeForm() {
     const {selectedItem, store, setStore, setSelectedItem} = useContext(StoreContext)
-    useEffect(() => {
-        //console.log(selectedItem)
-    }, [selectedItem, setSelectedItem]);
+    const [updatedItem, setUpdatedItem] = useState({
+        updated: false
+    })
     const handleChangeTitle = (e) => {
+        // updateItem(selectedItem.id, 'title', e.target.value)
         const storeCopy = [...store]
         storeCopy.map(i => {
             if (i.id === selectedItem.id) {
@@ -69,6 +71,7 @@ export function EditCakeForm() {
                                 !selectedItem.isAvailable && <p><FiBox className={'icon'}/> En rupture</p>
                             }
                         </AvailableToggle>
+                        {/*{  && <Alert message={"Ajouté avec succès"} icon={<FaRegCheckCircle />} color={theme.colors.success}/>}*/}
                     </PriceToggle>
                     <p>Cliquer sur le produit pour le modifier en <u>temps réel</u></p>
                 </Fields>

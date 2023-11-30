@@ -4,23 +4,32 @@ import styled from "styled-components";
 import {theme} from "../../theme/index.js";
 import {MdAccountCircle, MdKeyboardArrowRight} from "react-icons/md";
 import {UserContext} from "../../context/UserContext.jsx";
+import {createUser, getUser} from "../../api/user.js";
+import {StoreContext} from "../../context/StoreContext.jsx";
 
 export const LoginForm = () => {
     const {user, setUser} = useContext(UserContext)
-    // const [user, setUser] = useState({
-    //     name: '',
-    //     isAdmin: false
-    // })
+    const {setStore, store, storeUser, setStoreUser} = useContext(StoreContext)
     const navigate = useNavigate();
     const handleInputChange = (e) => {
         const user = e.target.value;
         setUser(user);
     }
-    const handleConnection = (e) => {
+    const handleConnection = async (e) => {
         e.preventDefault()
         if (user !== '') {
-            navigate('/order', { state: { user } })
-            //setUser('');
+            const alreadyExist = await getUser(user)
+            if(alreadyExist.length === 0) {
+                createUser(user)
+                const newUser = await getUser(user)
+                setStore(newUser[0].data.menu)
+                navigate('/order', { state: { user } })
+                setStoreUser(newUser[0].id)
+            } else {
+                setStore(alreadyExist[0].data.menu)
+                navigate('/order', { state: { user } })
+                setStoreUser(alreadyExist[0].id)
+            }
         } else {
             alert('Vous devez entrer un prénom pour vous connecter !');
         }

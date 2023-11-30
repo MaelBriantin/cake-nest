@@ -15,7 +15,6 @@ export const OrderPage = () => {
     const {adminMode} = useContext(AdminContext)
     const {user} = useContext(UserContext)
     const navigate = useNavigate()
-
     useEffect(() => {
         !user && navigate('/')
     }, [user, navigate]);
