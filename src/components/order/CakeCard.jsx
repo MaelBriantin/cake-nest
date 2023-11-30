@@ -16,7 +16,7 @@ export const CakeCard = (props) => {
 
     const isSelected = selectedItem.id === id
     const isAvailable = store.find(i => i.id === id).isAvailable
-    console.log(isAvailable)
+    // console.log(isAvailable)
     const handleAdminClick = (e) => {
         e.stopPropagation();
         e.preventDefault();

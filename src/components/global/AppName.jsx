@@ -3,14 +3,14 @@ import {theme} from "../../theme/index.js";
 import styled from "styled-components";
 
 export const AppName = (props) => {
-    const {size} = props
+    const {size, onClick} = props
     if (size === 'login') {
         return (
-            <LoginTitle>
+            <LoginTitleClick onClick={onClick}>
                 Cake
                 <LoginLogo alt='' src={cakeLogo}/>
                 Nest
-            </LoginTitle>
+            </LoginTitleClick>
         )
     } if (size === 'header') {
         return (
@@ -35,6 +35,10 @@ const LoginTitle = styled.div`
   font-size: ${theme.fonts.size.P6};
   font-weight: ${theme.fonts.weights.bold};
   color: ${theme.colors.primary};
+`
+
+const LoginTitleClick = styled(LoginTitle)`
+  cursor: pointer;
 `
 
 const HeaderTitle = styled.div`

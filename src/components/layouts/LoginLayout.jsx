@@ -1,18 +1,19 @@
-import {LoginForm} from "../../components/login/LoginForm.jsx";
-import cakeLogo from "../../assets/images/cupcake.png"
+import {Outlet, useNavigate} from "react-router-dom";
 import loginBackground from "../../assets/images/tarts.jpg"
 import styled from "styled-components";
 import {theme} from "../../theme/index.js";
-import {AppName} from "../../components/global/AppName.jsx";
-import {LoginSubtitle} from "../../components/login/LoginSubtitle.jsx";
+import {AppName} from "../global/AppName.jsx";
 
-export const LoginPage = () => {
+export const LoginLayout = () => {
+    const navigate = useNavigate()
+    const returnToLogin = () => {
+        navigate('/')
+    }
     return (
         <LoginStyle>
             <Container>
-                <AppName size={'login'} />
-                <LoginSubtitle />
-                <LoginForm />
+                <AppName size={'login'} onClick={() => returnToLogin()}/>
+                <Outlet />
             </Container>
         </LoginStyle>
     )
@@ -22,17 +23,16 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 100px;
+  gap: 50px;
   align-items: center;
   height: 100%;
-  width: 30%;
+  width: 40%;
   margin: auto;
   position: relative;
 `
 
-
-
 const LoginStyle = styled.div`
+  user-select: none;
   width: 100vw;
   height: 100vh;
   background-image: url(${loginBackground});

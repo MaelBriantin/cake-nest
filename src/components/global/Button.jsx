@@ -17,7 +17,7 @@ export const Button = (props) => {
             return <SmallPrimaryButtonStyle $adminMode={adminMode} $isSelected={isSelected} onClick={onClick}>{value}</SmallPrimaryButtonStyle>
         }
         else {
-            return <PrimaryButtonStyle onClick={onClick}>{value}</PrimaryButtonStyle>
+            return <PrimaryButtonStyle $size={size} onClick={onClick}>{value}</PrimaryButtonStyle>
         }
     } else if (disable) {
         return <SmallDisableButtonStyle $adminMode={adminMode} $isSelected={isSelected}>{value}</SmallDisableButtonStyle>
@@ -27,7 +27,7 @@ export const Button = (props) => {
 }
 
 const PrimaryButtonStyle = styled.div`
-  width: 100%;
+  width: ${props => props.$size ? `${props.$size}px` : '100%'};
   height: 60px;
   text-decoration: none;
   background: ${props => props.$isSelected ? theme.colors.white : theme.colors.primary};
