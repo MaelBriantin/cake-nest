@@ -98,6 +98,7 @@ const AvailableToggle = styled.div`
   align-items: center;
   justify-content: center;
   position: relative;
+  border: 2px solid ${props => props.$isAvailable ? theme.colors.primary : theme.colors.greyLight};
   p{
     color: ${ props => props.$isAvailable ? theme.colors.white : theme.colors.greyDark}!important;
     height: 100%;

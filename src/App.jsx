@@ -5,8 +5,8 @@ import "./App.css"
 import {Layout} from "./components/layouts/Layout.jsx";
 import {ContextProviders} from "./context/ContextProviders.jsx";
 import {LoginLayout} from "./components/layouts/LoginLayout.jsx";
-import {Login} from "./components/login/Login.jsx";
-import {Signin} from "./components/login/Signin.jsx";
+import {LoginPage} from "./pages/login/LoginPage.jsx";
+import {SigninPage} from "./pages/login/SigninPage.jsx";
 
 function App() {
     return (
@@ -14,8 +14,8 @@ function App() {
                 <ContextProviders>
                     <Routes>
                         <Route element={<LoginLayout />}>
-                            <Route path={'/'} element={<Login />}/>
-                            <Route path={'/signin'} element={<Signin />}/>
+                            <Route path={'/'} element={<LoginPage />}/>
+                            <Route path={'/signin'} element={<SigninPage />}/>
                         </Route>
                         {/*<Route path='/' element={<LoginPage/>}/>*/}
                         {/*<Route path='/signin' element={<SigninPage/>}/>*/}

@@ -10,7 +10,7 @@ import {CartContext} from "../../context/CartContext.jsx";
 
 export const CakeCard = (props) => {
     const {adminMode, setSelectedTab, setOpenedPanel} = useContext(AdminContext)
-    const {store, setStore, selectedItem, setSelectedItem, setIsAdd} = useContext(StoreContext)
+    const {store, setStore, selectedItem, setSelectedItem, setIsAdd, deleteCake} = useContext(StoreContext)
     const {cart, setCart} = useContext(CartContext)
     const {image, title, price, id} = props
 
@@ -36,8 +36,9 @@ export const CakeCard = (props) => {
         if(selectedItem.id === id) {
             setSelectedItem({})
         }
-        const cartCopy = [...cart]
-        setCart(cartCopy.filter(i => i.id !== id))
+        // const cartCopy = [...cart]
+        // setCart(cartCopy.filter(i => i.id !== id))
+        deleteCake(id)
     }
     const addToCart = (item, e) => {
         e.stopPropagation();
@@ -97,9 +98,6 @@ const RemoveButton = styled.div`
   font-size: ${theme.fonts.size.P4};
   color: ${props => props.$isSelected ? theme.colors.white : theme.colors.primary};
   position: relative;
-  //top: 5px;
-  //right: 5px;
-  //position: relative;
   width: 100%;
   display: flex;
   justify-content: flex-end;

@@ -1,20 +1,20 @@
-import {Input} from "../global/Input.jsx";
+import {Input} from "../../components/global/Input.jsx";
 import {MdAlternateEmail} from "react-icons/md";
 import {RiLockPasswordFill} from "react-icons/ri";
 import {styled} from "styled-components";
-import {PanelButton} from "../admin/PanelButton.jsx";
+import {PanelButton} from "../../components/admin/PanelButton.jsx";
 import {useContext, useState} from "react";
 import {theme} from "../../theme/index.js";
 import {signInWithEmailAndPassword } from "firebase/auth";
 import {auth} from "../../api/auth.js";
 import {UserContext} from "../../context/UserContext.jsx";
 import {useNavigate} from "react-router-dom";
-import {LoginSubtitle} from "./LoginSubtitle.jsx";
+import {LoginSubtitle} from "../../components/login/LoginSubtitle.jsx";
 import {convertApiError} from "../../api/errors.js";
 import {getUserMenu} from "../../api/menu.js";
 import {StoreContext} from "../../context/StoreContext.jsx";
 
-export const Login = () => {
+export const LoginPage = () => {
     const [userConnection, setUserConnection] = useState({
         email: '',
         password: '',
@@ -22,7 +22,7 @@ export const Login = () => {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
     const { setUser} = useContext(UserContext)
-    const {setStore} = useContext(StoreContext)
+    const {setStore, setMenuId} = useContext(StoreContext)
     const navigate = useNavigate()
     const onHandleChange = (type, e) => {
         switch (type) {
@@ -43,27 +43,31 @@ export const Login = () => {
         setTimeout(() => setError(''), 6000)
     }
     const handleConnection = (e) => {
-        setLoading(true)
         e.preventDefault()
-        if (userConnection.password === '' || userConnection.email === '') {
-            displayError('Veuillez remplir tous les champs du formulaire')
-        }
-        else {
-            signInWithEmailAndPassword(auth, userConnection.email, userConnection.password)
-                .then(async (userCredential) => {
-                    setUser({
-                        name: userCredential.user.displayName,
-                        id: userCredential.user.displayName
+        if (!loading) {
+            if (userConnection.password === '' || userConnection.email === '') {
+                displayError('Veuillez remplir tous les champs du formulaire')
+            }
+            else {
+                setLoading(true)
+                signInWithEmailAndPassword(auth, userConnection.email, userConnection.password)
+                    .then(async (userCredential) => {
+                        setUser({
+                            name: userCredential.user.displayName,
+                            id: userCredential.user.displayName
+                        });
+                        const menu = await getUserMenu(userCredential.user.uid)
+                        setStore(menu?.data.menu)
+                        setMenuId(menu?.id)
+                        navigate('/order')
+                    })
+                    .catch((error) => {
+                        displayError(convertApiError(error.code))
+                        // displayError(error.code)
+                        setLoading(false)
                     });
-                    setStore(await getUserMenu(userCredential.user.uid))
-                    navigate('/order')
-                })
-                .catch((error) => {
-                    displayError(convertApiError(error.code))
-                    // displayError(error.code)
-                });
+            }
         }
-        setLoading(false)
     }
 
     return (
@@ -73,7 +77,14 @@ export const Login = () => {
                 <p>{error !== '' && <span className={'errorMessage'}>{error}</span>}</p>
                 <Input placeholder={'Email'} icon={<MdAlternateEmail />} width={'400'} type={'text'} onInput={(e) => onHandleChange('email', e)} value={userConnection.email} />
                 <Input placeholder={'Mot de passe'} icon={<RiLockPasswordFill />} width={'400'} type={'password'} onInput={(e) => onHandleChange('password', e)} value={userConnection.password} />
-                <PanelButton width={'200'} type={'submit'} loading={loading} text={'Se connecter'} onClick={(e) => handleConnection(e)}/>
+                {/*{*/}
+                {/*    !loading && <PanelButton width={'200'} type={'submit'} loading={loading} text={'Se connecter'}*/}
+                {/*              onClick={(e) => handleConnection(e)}/>}*/}
+                {/*{*/}
+                {/*    loading && <p>Chargement</p>*/}
+                {/*}*/}
+                <PanelButton width={'200'} type={'submit'} loading={loading} text={'Se connecter'}
+                             onClick={(e) => handleConnection(e)}/>
                 {/*<div className={'noAccount'}>Vous n'avez pas encore de compte ? */}
                 <span className={'signin'} onClick={() => navigate('/signin')}>Créer un compte</span>
                 {/*</div>*/}

@@ -5,7 +5,7 @@ import {VscLoading} from "react-icons/vsc";
 export function PanelButton(props) {
     const {text, success, onClick, primary, type, loading, width} = props
     return (
-        <Button $width={width} $loading={loading} type={type} onClick={(e) => onClick(e)} $success={success} $primary={primary}>
+        <Button $width={width} $loading={loading} type={type} onClick={!loading ? ((e) => onClick(e)) : () => {}} $success={success} $primary={primary}>
             <button hidden={true} />
             { !loading && text }
             { loading && <VscLoading className={'loading'} /> }
@@ -37,7 +37,9 @@ const Button = styled.div`
   color: ${theme.colors.white};
   transition: all 200ms;
   &:hover {
-    ${(props => !props.$loading && !props.$success) ? `color: ${theme.colors.primary}` : `${theme.colors.success}`};
+    ${props => props.$success && `color: ${theme.colors.success};`}
+    ${props => !props.$success && !props.$loading && `color: ${theme.colors.primary};`}
+    ${props => !props.$success && props.$loading && `color: ${theme.colors.white};`}
     ${props => !props.$loading && `background: ${theme.colors.white};`}
   }
   .loading{

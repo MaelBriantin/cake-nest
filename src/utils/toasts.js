@@ -1,5 +1,4 @@
 import {toast} from "react-toastify";
-import {theme} from "../theme/index.js";
 
 export const callToast = (message) => toast.info(message, {
     position: "bottom-right",

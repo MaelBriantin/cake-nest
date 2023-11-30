@@ -1,7 +1,7 @@
 import {useContext, useState} from "react";
 import styled from "styled-components";
 import 'react-toastify/dist/ReactToastify.css'
-import {callToast} from "../../utils/call_toast.js";
+import {callToast} from "../../utils/toasts.js";
 import {theme} from "../../theme/index.js";
 import {AdminContext} from "../../context/AdminContext.jsx";
 

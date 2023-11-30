@@ -23,7 +23,7 @@ export const CartCard = (props) => {
         setTimeout(() => {
             const cartCopy = [...cart]
             setCart(cartCopy.filter(i => i.id !== id))
-        }, 350)
+        }, 150)
     }
     const selectElement = (e) => {
         e.stopPropagation();
@@ -103,7 +103,7 @@ const CartCardStyle = styled.div`
   &:hover .delete{
     transform: translateX(0);
   }
-  animation: 400ms ${props => props.$removed ? DeleteKeyframe : AddKeyframe} linear;
+  animation: 200ms ${props => props.$removed ? DeleteKeyframe : AddKeyframe} linear;
 `
 
 const TitlePrice = styled.div`

@@ -1,20 +1,20 @@
-import {Input} from "../global/Input.jsx";
+import {Input} from "../../components/global/Input.jsx";
 import {MdAccountCircle, MdAlternateEmail} from "react-icons/md";
 import {RiLockPasswordFill} from "react-icons/ri";
 import {styled} from "styled-components";
-import {PanelButton} from "../admin/PanelButton.jsx";
+import {PanelButton} from "../../components/admin/PanelButton.jsx";
 import {useContext, useState} from "react";
 import {theme} from "../../theme/index.js";
-import { createUserWithEmailAndPassword, updateProfile, getAuth } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile} from "firebase/auth";
 import {auth} from "../../api/auth.js";
 import {UserContext} from "../../context/UserContext.jsx";
 import {useNavigate} from "react-router-dom";
-import {LoginSubtitle} from "./LoginSubtitle.jsx";
+import {LoginSubtitle} from "../../components/login/LoginSubtitle.jsx";
 import {convertApiError} from "../../api/errors.js";
 import {createUserMenu, getUserMenu} from "../../api/menu.js";
 import {StoreContext} from "../../context/StoreContext.jsx";
 
-export const Signin = () => {
+export const SigninPage = () => {
     const [userCreation, setUserCreation] = useState({
         email: '',
         password: '',
@@ -23,7 +23,7 @@ export const Signin = () => {
     })
     const navigate = useNavigate()
     const {setUser} = useContext(UserContext)
-    const {setStore} = useContext(StoreContext)
+    const {setStore, setMenuId} = useContext(StoreContext)
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
     const onHandleChange = (type, e) => {
@@ -56,55 +56,61 @@ export const Signin = () => {
     }
     const handleCreateAccount = (e) => {
         e.preventDefault()
-        if (userCreation.password === '' || userCreation.confirmPassword === '' || userCreation.email === '' || userCreation.username === '') {
-            displayError('Veuillez remplir tous les champs du formulaire')
-        }
-        else if (userCreation.password.length < 6) {
-            displayError('Le mot de passe doit contenir au moins 6 caractères')
-        }
-        else if (userCreation.confirmPassword !== userCreation.password) {
-            displayError('Erreur de confirmation de mot de passe')
-        }
-        else {
+        if (!loading) {
             setLoading(true)
-            createUserWithEmailAndPassword(auth, userCreation.email, userCreation.password)
-                .then((userCredential) => {
-                    const user = userCredential.user;
-                    setUser({
-                        name: userCreation.username,
-                    });
-                    //setUser(user);
-                    updateProfile(user, {
-                        displayName: userCreation.username
-                    })
-                        .then(async () => {
-                            setUser({
-                                name: user.displayName,
-                                id: user.uid
-                            });
-                            createUserMenu(user.uid)
-                            setStore(await getUserMenu(user.uid).then(r => r))
-                            navigate('/order')
-                        })
-                        .catch((error) => {
-                            console.error('Erreur lors de la mise à jour du profil :', error);
+            if (userCreation.password === '' || userCreation.confirmPassword === '' || userCreation.email === '' || userCreation.username === '') {
+                displayError('Veuillez remplir tous les champs du formulaire')
+            }
+            else if (userCreation.password.length < 6) {
+                displayError('Le mot de passe doit contenir au moins 6 caractères')
+            }
+            else if (userCreation.confirmPassword !== userCreation.password) {
+                displayError('Erreur de confirmation de mot de passe')
+            }
+            else {
+                setLoading(true)
+                createUserWithEmailAndPassword(auth, userCreation.email, userCreation.password)
+                    .then((userCredential) => {
+                        const user = userCredential.user;
+                        setUser({
+                            name: userCreation.username,
                         });
-                })
-                .catch((error) => {
-                    displayError(convertApiError(error.code))
-                    // displayError(error.code)
-                })
-                .finally(() => {
-                    setLoading(false);
-                });
-            setLoading(false)
+                        //setUser(user);
+                        updateProfile(user, {
+                            displayName: userCreation.username
+                        })
+                            .then(async () => {
+                                setUser({
+                                    name: user.displayName,
+                                    id: user.uid
+                                });
+                                createUserMenu(user.uid)
+                                const menu = await getUserMenu(user.uid).then(r => r)
+                                setStore(menu.data.menu)
+                                setMenuId(menu.id)
+                                navigate('/order')
+                            })
+                            .catch((error) => {
+                                console.error('Erreur lors de la mise à jour du profil :', error);
+                                setLoading(false)
+                            });
+                    })
+                    .catch((error) => {
+                        displayError(convertApiError(error.code))
+                        setLoading(false)
+                        // displayError(error.code)
+                    })
+                    .finally(() => {
+                        //setLoading(false);
+                    });
+            }
         }
     }
 
     return (
         <>
             <LoginSubtitle type={'signin'}/>
-            <CreateAccountPageStyle>
+            <CreateAccountPageStyle action={''} onSubmit={(e) => handleCreateAccount(e)}>
                 <p>{error !== '' && <span className={'errorMessage'}>{error}</span>}</p>
                 <Input placeholder={'Nom d\'utilisateur'} icon={<MdAccountCircle />} width={'400'} type={'text'} onInput={(e) => onHandleChange('username', e)} value={userCreation.username} />
                 <Input placeholder={'Email'} icon={<MdAlternateEmail />} width={'400'} type={'text'} onInput={(e) => onHandleChange('email', e)} value={userCreation.email} />
