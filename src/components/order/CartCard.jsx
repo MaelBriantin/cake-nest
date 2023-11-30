@@ -11,7 +11,6 @@ import {AdminContext} from "../../context/AdminContext.jsx";
 export const CartCard = (props) => {
     const {cart, setCart} = useContext(CartContext)
     const {adminMode, setSelectedTab, setOpenedPanel} = useContext(AdminContext)
-    const {isAdd, setIsAdd} = useContext(StoreContext)
     const [removed, setRemoved] = useState(false)
     const {item} = props;
     const {imageSource, title, price, cartQuantity, id} = item;
@@ -23,7 +22,7 @@ export const CartCard = (props) => {
         setTimeout(() => {
             const cartCopy = [...cart]
             setCart(cartCopy.filter(i => i.id !== id))
-        }, 350)
+        }, 150)
     }
     const selectElement = (e) => {
         e.stopPropagation();
@@ -103,7 +102,7 @@ const CartCardStyle = styled.div`
   &:hover .delete{
     transform: translateX(0);
   }
-  animation: 400ms ${props => props.$removed ? DeleteKeyframe : AddKeyframe} linear;
+  animation: 200ms ${props => props.$removed ? DeleteKeyframe : AddKeyframe} linear;
 `
 
 const TitlePrice = styled.div`

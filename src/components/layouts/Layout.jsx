@@ -2,8 +2,7 @@ import styled from "styled-components";
 import {theme} from "../../theme/index.js";
 import {Outlet} from "react-router-dom";
 import {Header} from "../global/Header.jsx";
-import {AdminPanel} from "../admin/AdminPanel.jsx";
-import {useContext, useState} from "react";
+import {useContext} from "react";
 import {UserContext} from "../../context/UserContext.jsx";
 
 export const Layout = () => {

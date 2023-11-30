@@ -10,13 +10,13 @@ import {CartContext} from "../../context/CartContext.jsx";
 
 export const CakeCard = (props) => {
     const {adminMode, setSelectedTab, setOpenedPanel} = useContext(AdminContext)
-    const {store, setStore, selectedItem, setSelectedItem, setIsAdd} = useContext(StoreContext)
+    const {store, setStore, selectedItem, setSelectedItem, deleteCake, setSync} = useContext(StoreContext)
     const {cart, setCart} = useContext(CartContext)
     const {image, title, price, id} = props
 
     const isSelected = selectedItem.id === id
     const isAvailable = store.find(i => i.id === id).isAvailable
-    console.log(isAvailable)
+    // console.log(isAvailable)
     const handleAdminClick = (e) => {
         e.stopPropagation();
         e.preventDefault();
@@ -33,11 +33,13 @@ export const CakeCard = (props) => {
         const storeCopy = [...store]
         const newStore = storeCopy.filter(item => item.id !== id)
         setStore(newStore)
+        setSync(true)
         if(selectedItem.id === id) {
             setSelectedItem({})
         }
         const cartCopy = [...cart]
         setCart(cartCopy.filter(i => i.id !== id))
+        //deleteCake(id)
     }
     const addToCart = (item, e) => {
         e.stopPropagation();
@@ -58,14 +60,13 @@ export const CakeCard = (props) => {
                 animate: true
             }
             setCart([newItem, ...cart])
-            setIsAdd(newItem)
         }
     }
 
     return (
         <CardContainer $adminMode={adminMode}  >
             <Card $isAvailable={isAvailable} $adminMode={adminMode} $isSelected={isSelected} onClick={(e) => handleAdminClick(e)} >
-                {adminMode && <RemoveButton $isSelected={isSelected} onClick={(e) => handleDelete(e)}><TiDelete/></RemoveButton>}
+                <RemoveButton $isSelected={isSelected}>{adminMode && <TiDelete className={'tiDelete'} onClick={(e) => handleDelete(e)} />}</RemoveButton>
                 <CardImage  ><img src={image} alt={''}/></CardImage>
                 <BottomCard $adminMode={adminMode}>
                     <CardTitle >{title}</CardTitle>
@@ -96,19 +97,19 @@ const CardContainer = styled.div`
 const RemoveButton = styled.div`
   font-size: ${theme.fonts.size.P4};
   color: ${props => props.$isSelected ? theme.colors.white : theme.colors.primary};
-  //position: absolute;
-  //top: 5px;
-  //right: 5px;
   position: relative;
-  cursor: pointer;
   width: 100%;
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
-  height: 1px;
+  height: 10px;
   transition: all 200ms;
-  z-index: 2;
-  &:hover {
+  .tiDelete{
+    cursor: pointer;
+    transition: all 200ms;
+    z-index: 2;
+  }
+  .tiDelete:hover{
     color: ${theme.colors.red};
   }
 `

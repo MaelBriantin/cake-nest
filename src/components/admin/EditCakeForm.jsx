@@ -9,10 +9,20 @@ import {HiCursorClick} from "react-icons/hi";
 import {FiBox} from "react-icons/fi";
 
 export function EditCakeForm() {
-    const {selectedItem, store, setStore, setSelectedItem} = useContext(StoreContext)
-    useEffect(() => {
-        //console.log(selectedItem)
-    }, [selectedItem, setSelectedItem]);
+    const {selectedItem, store, setStore, autoUpdateMenu, sync, setSync} = useContext(StoreContext)
+
+    // useEffect(() => {
+    //     const timeoutId = setTimeout(() => {
+    //         if (sync) {
+    //             console.log('update')
+    //             autoUpdateMenu();
+    //             setSync(false)
+    //         }
+    //     }, 4000);
+    //
+    //     return () => clearTimeout(timeoutId);
+    // }, [store, sync]);
+
     const handleChangeTitle = (e) => {
         const storeCopy = [...store]
         storeCopy.map(i => {
@@ -21,6 +31,7 @@ export function EditCakeForm() {
             }
         })
         setStore(storeCopy)
+        setSync(true);
     }
     const handleChangeUrl = (e) => {
         if(Object.keys(selectedItem).length !== 0) {
@@ -32,6 +43,7 @@ export function EditCakeForm() {
             })
             setStore(storeCopy)
         }
+        setSync(true);
     }
     const handleChangePrice = (e) => {
         const storeCopy = [...store]
@@ -41,6 +53,7 @@ export function EditCakeForm() {
             }
         })
         setStore(storeCopy)
+        setSync(true);
     }
     const toggleAvailable = () => {
         const storeCopy = [...store]
@@ -50,23 +63,25 @@ export function EditCakeForm() {
             }
         })
         setStore(storeCopy)
+        setSync(true);
     }
     return (
         Object.keys(selectedItem).length !== 0 ? (
             <Form>
                 <Image>
-                    {selectedItem.imageSource === '' ? 'Aucune image' : <img src={selectedItem.imageSource} alt={'Il y a un problème avec votre image'} />}
+                    {store.find(i => i.id === selectedItem.id).imageSource === '' ? 'Aucune image' : <img src={store.find(i => i.id === selectedItem.id).imageSource} alt={'Il y a un problème avec votre image'} />}
                 </Image>
                 <Fields>
-                    <Input firstInput placeholder={'Nom du produit'} width={'300'} icon={<GiCupcake />} value={selectedItem.title || ''} onInput={(e) => handleChangeTitle(e)} />
-                    <Input placeholder={'Lien url d\'une image (ex: https://la-photo-de-mo-produit.png)'} width={'650'} icon={<FaCamera />} value={selectedItem.imageSource || ''} onInput={(e) => handleChangeUrl(e)} />
-                    <PriceToggle><Input placeholder={'Prix'} width={'150'} icon={<FaEuroSign />} type={'number'} value={selectedItem.price} onInput={(e) => handleChangePrice(e)} />
-                        <AvailableToggle onClick={toggleAvailable} $isAvailable={selectedItem.isAvailable}>
+                    <Input firstInput placeholder={'Nom du produit'} width={'300'} icon={<GiCupcake />} value={store.find(i => i.id === selectedItem.id).title || ''} onInput={(e) => handleChangeTitle(e)} />
+                    <Input placeholder={'Lien url d\'une image (ex: https://la-photo-de-mo-produit.png)'} width={'650'} icon={<FaCamera />} value={store.find(i => i.id === selectedItem.id).imageSource || ''} onInput={(e) => handleChangeUrl(e)} />
+                    <PriceToggle>
+                        <Input placeholder={'Prix'} width={'150'} icon={<FaEuroSign />} type={'number'} value={store.find(i => i.id === selectedItem.id).price} onInput={(e) => handleChangePrice(e)} />
+                        <AvailableToggle onClick={toggleAvailable} $isAvailable={store.find(i => i.id === selectedItem.id).isAvailable}>
                             {
-                                selectedItem.isAvailable && <p><FiBox className={'icon'}/> En stock</p>
+                                store.find(i => i.id === selectedItem.id).isAvailable && <p><FiBox className={'icon'}/> En stock</p>
                             }
                             {
-                                !selectedItem.isAvailable && <p><FiBox className={'icon'}/> En rupture</p>
+                                !store.find(i => i.id === selectedItem.id).isAvailable && <p><FiBox className={'icon'}/> En rupture</p>
                             }
                         </AvailableToggle>
                     </PriceToggle>
@@ -98,6 +113,7 @@ const AvailableToggle = styled.div`
   align-items: center;
   justify-content: center;
   position: relative;
+  border: 2px solid ${props => props.$isAvailable ? theme.colors.primary : theme.colors.greyLight};
   p{
     color: ${ props => props.$isAvailable ? theme.colors.white : theme.colors.greyDark}!important;
     height: 100%;

@@ -22,28 +22,38 @@ export const OrderPage = () => {
     return user && (
         <UberContainer>
             <Cart />
-            <CardContainer $openedCart={openedCart}>
-                {adminMode && store.length === 0 && (
-                    <EmptyStoreStyle>
-                        <p>Il n'y a plus de produits disponibles ?</p>
-                        <p>Cliquez ci-dessous pour les réinitialiser</p>
-                        <PanelButton primary text={'Générer de nouveaux gateaux'} onClick={() => resetContext()} />
-                    </EmptyStoreStyle>
-                )}
-
-                { store.length === 0 && (
-                    <EmptyStoreStyle>
-                        <p>Victime de notre succès</p>
-                        <p>De nouvelles recettes sont en préparation, revenez vite !</p>
-                    </EmptyStoreStyle>
-                )}
-
-                { store.length > 0 && (
-                    store.map((e) => (
-                        <CakeCard title={e.title} image={e.imageSource} price={e.price} id={e.id} key={e.id} />
-                    ))
-                )}
-            </CardContainer>
+            {
+                store.length !== 0 && (
+                    <CardContainer $openedCart={openedCart}>
+                        { store.length > 0 && (
+                            store.map((e) => (
+                                <CakeCard title={e.title} image={e.imageSource} price={e.price} id={e.id} key={e.id} />
+                            ))
+                        )}
+                    </CardContainer>
+                )
+            }
+            { (adminMode && store.length === 0) && (
+                <EmptyStoreStyle $openedCart={openedCart}>
+                    {
+                        (adminMode && store.length === 0) && (
+                            <>
+                                <p>Il n'y a plus de produits disponibles ?</p>
+                                <p>Cliquez ci-dessous pour les réinitialiser</p>
+                                <PanelButton primary text={'Générer de nouveaux gateaux'} onClick={(e) => resetContext(e)} />
+                            </>
+                        )
+                    }
+                    {
+                        (!adminMode && store.length === 0) && (
+                            <>
+                                <p>Victime de notre succès</p>
+                                <p>De nouvelles recettes sont en préparation, revenez vite !</p>
+                            </>
+                        )
+                    }
+                </EmptyStoreStyle>
+            )}
             <AdminPanel />
         </UberContainer>
 
@@ -56,19 +66,6 @@ const UberContainer = styled.div`
   height: 100%;
   width: 100%;
 `
-
-// const CardContainer = styled.div`
-//   width: ${props => props.$openedCart ? '100%' : '80%'};
-//   padding: 75px;
-//   margin-left: ${props => props.$openedCart ? '0%' : '20%'};
-//   display: flex;
-//   justify-content: flex-start;
-//   align-items: flex-start;
-//   gap: 40px;
-//   flex-wrap: wrap;
-//   overflow: scroll;
-//   transition: all 400ms;
-// `
 
 const CardContainer = styled.div`
   width: ${props => props.$openedCart ? '100%' : '80%'};
@@ -84,7 +81,8 @@ const CardContainer = styled.div`
 `;
 
 const EmptyStoreStyle = styled.div`
-  height: 100%;
+  min-height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
