@@ -83,7 +83,7 @@ const CartContainer = styled.div`
   height: 100%;
   box-shadow: ${theme.shadows.card};
   font-family: 'Pacifico', 'sans-serif';
-  transition: all 400ms;
+  transition: all 600ms;
   ${props => props.$opened && 'transform: translateX(-100%);'};
 `
 const ToggleCart = styled.div`

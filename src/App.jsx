@@ -7,6 +7,8 @@ import {ContextProviders} from "./context/ContextProviders.jsx";
 import {LoginLayout} from "./components/layouts/LoginLayout.jsx";
 import {LoginPage} from "./pages/login/LoginPage.jsx";
 import {SignUpPage} from "./pages/login/SignUpPage.jsx";
+import {auth} from "./api/auth.js";
+import {useAutoUpdate} from "./hooks/store/useAutoUpdate.js";
 
 function App() {
     return (

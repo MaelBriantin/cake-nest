@@ -3,9 +3,15 @@ import {MdAlternateEmail} from "react-icons/md";
 import {RiLockPasswordFill} from "react-icons/ri";
 import {styled} from "styled-components";
 import {PanelButton} from "../../components/admin/PanelButton.jsx";
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {theme} from "../../theme/index.js";
-import {signInWithEmailAndPassword } from "firebase/auth";
+import {
+    signInWithEmailAndPassword,
+    setPersistence,
+    browserSessionPersistence,
+    getAuth,
+    onAuthStateChanged
+} from "firebase/auth";
 import {auth} from "../../api/auth.js";
 import {UserContext} from "../../context/UserContext.jsx";
 import {useNavigate} from "react-router-dom";
@@ -19,9 +25,10 @@ export const LoginPage = () => {
         email: '',
         password: '',
     })
+
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
-    const { setUser} = useContext(UserContext)
+    const {setUser} = useContext(UserContext)
     const {setStore, setMenuId} = useContext(StoreContext)
     const navigate = useNavigate()
     const onHandleChange = (type, e) => {
@@ -43,23 +50,30 @@ export const LoginPage = () => {
         setTimeout(() => setError(''), 6000)
     }
     const handleConnection = (e) => {
+
         e.preventDefault()
         if (!loading) {
             if (userConnection.password === '' || userConnection.email === '') {
                 displayError('Veuillez remplir tous les champs du formulaire')
-            }
-            else {
+            } else {
                 setLoading(true)
-                signInWithEmailAndPassword(auth, userConnection.email, userConnection.password)
-                    .then(async (userCredential) => {
-                        setUser({
-                            name: userCredential.user.displayName,
-                            id: userCredential.user.displayName
-                        });
-                        const menu = await getUserMenu(userCredential.user.uid)
-                        setStore(menu.data.menu)
-                        setMenuId(menu.id)
-                        navigate('/order')
+                setPersistence(auth, browserSessionPersistence)
+                    .then(() => {
+                        signInWithEmailAndPassword(auth, userConnection.email, userConnection.password)
+                            .then(async (userCredential) => {
+                                setUser({
+                                    name: userCredential.user.displayName,
+                                    id: userCredential.user.uid
+                                });
+                                const menu = await getUserMenu(userCredential.user.uid)
+                                setStore(menu.data.menu)
+                                setMenuId(menu.id)
+                                navigate('/order')
+                            }).catch((error) => {
+                            // Handle Errors here.
+                            displayError(convertApiError(error.code))
+                            //const errorMessage = error.message;
+                        })
                     })
                     .catch((error) => {
                         displayError(convertApiError(error.code))
@@ -75,8 +89,10 @@ export const LoginPage = () => {
             <LoginSubtitle type={'login'}/>
             <CreateAccountPageStyle action={''} onSubmit={(e) => handleConnection(e)}>
                 <p>{error !== '' && <span className={'errorMessage'}>{error}</span>}</p>
-                <Input placeholder={'Email'} icon={<MdAlternateEmail />} width={'400'} type={'text'} onInput={(e) => onHandleChange('email', e)} value={userConnection.email} />
-                <Input placeholder={'Mot de passe'} icon={<RiLockPasswordFill />} width={'400'} type={'password'} onInput={(e) => onHandleChange('password', e)} value={userConnection.password} />
+                <Input placeholder={'Email'} icon={<MdAlternateEmail/>} width={'400'} type={'text'}
+                       onInput={(e) => onHandleChange('email', e)} value={userConnection.email}/>
+                <Input placeholder={'Mot de passe'} icon={<RiLockPasswordFill/>} width={'400'} type={'password'}
+                       onInput={(e) => onHandleChange('password', e)} value={userConnection.password}/>
                 {/*{*/}
                 {/*    !loading && <PanelButton width={'200'} type={'submit'} loading={loading} text={'Se connecter'}*/}
                 {/*              onClick={(e) => handleConnection(e)}/>}*/}

@@ -4,6 +4,7 @@ import {Outlet} from "react-router-dom";
 import {Header} from "../global/Header.jsx";
 import {useContext} from "react";
 import {UserContext} from "../../context/UserContext.jsx";
+import {useAutoUpdate} from "../../hooks/store/useAutoUpdate.js";
 
 export const Layout = () => {
     const {color} = useContext(UserContext)
