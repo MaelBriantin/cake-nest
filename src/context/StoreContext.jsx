@@ -1,6 +1,8 @@
 import React, {createContext, useEffect, useState} from "react";
 import {fakeMenu2} from "../store/cakes/cakes.js";
 import {getMenu, updateMenu} from "../api/menu.js";
+import {equals} from "../utils/compareObjects.js";
+import {useAutoUpdate} from "../hooks/store/useAutoUpdate.js";
 
 export const StoreContext = createContext({
     store: fakeMenu2,
@@ -24,26 +26,24 @@ export const StoreContext = createContext({
 
 
 export const StoreProvider = ({ children }) => {
-    const [store, setStore] = useState(fakeMenu2);
+    const [store, setStore] = useState({});
     const [menuId, setMenuId] = useState('')
     const [selectedItem, setSelectedItem] = useState({})
     const [openedCart, setOpenedCart] = useState(false)
     const [sync, setSync] = useState(false)
     const [syncFailed, setSyncFailed] = useState(false)
 
-    // console.log('syncFailed', syncFailed)
-    // console.log('sync', sync)
-    useEffect(() => {
-        const timeoutId = setTimeout(() => {
-            if (sync) {
-                console.log('update')
-                autoUpdateMenu().then(r => r);
-                setSync(false)
-            }
-        }, 3000);
+    //
+    // useEffect(() => {
+    //     const timeoutId = setTimeout(() => {
+    //         if (sync) {
+    //             autoUpdateMenu();
+    //             setSync(!sync)
+    //         }
+    //     }, 3000);
+    //     return () => clearTimeout(timeoutId);
+    // }, [store, sync]);
 
-        return () => clearTimeout(timeoutId);
-    }, [store, sync]);
 
     const resetContext = async (e) => {
         //await updateMenu(menuId, fakeMenu2);
@@ -88,17 +88,22 @@ export const StoreProvider = ({ children }) => {
         setStore(updatedMenu)
     }
 
+    /**
+     * Deeply compares the state of remote store to the local state.
+     * If the states are different the local store is push to firebase.
+     *
+     * @returns {void}
+     */
     const autoUpdateMenu = async () => {
-        console.log('menuId', menuId)
-        try {
-            await updateMenu(menuId, store)
-        } catch (e) {
-            setSyncFailed(true)
-            console.error(e)
+        const remoteStore = await getMenu(menuId)
+        if(!equals(remoteStore, store)){
+            try {
+                await updateMenu(menuId, store)
+            } catch (e) {
+                setSyncFailed(true)
+                console.error(e)
+            }
         }
-        //const newMenu = await getMenu(menuId)
-        //setStore(newMenu)
-        // await updateMenu(menuId, store);
     }
 
     return (

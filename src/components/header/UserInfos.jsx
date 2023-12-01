@@ -10,8 +10,12 @@ import {StoreContext} from "../../context/StoreContext.jsx";
 import {RxUpdate} from "react-icons/rx";
 import {IoIosCloudDone} from "react-icons/io";
 import {VscError} from "react-icons/vsc";
+import {useAutoUpdate} from "../../hooks/store/useAutoUpdate.js";
 
 export const UserInfos = (props) => {
+    // autoUpdate remote / local store
+    useAutoUpdate()
+
     const {user, setUser, setColor} = useContext(UserContext)
     const navigate = useNavigate()
     const {setAdminMode, setOpenedPanel, setSelectedTab} = useContext(AdminContext)
@@ -27,12 +31,12 @@ export const UserInfos = (props) => {
 
     return (
         <Connection>
+            <AdminToggle />
             <Update>
                 {(sync) && <RxUpdate className={'inSave'} />}
                 {(!sync && !syncFailed) && <IoIosCloudDone className={'saved'} title={'Synchronisé. Relancer la synchronisation ?'} onClick={() => setSync(true)}/>}
                 {(!sync && syncFailed) && <VscError className={'failed'} title={'Echec de synchronisation. Relancer ?'} onClick={() => setSync(true)}/>}
             </Update>
-            <AdminToggle />
             <Infos>
                 <h1>Salut, <span>{user.name}</span> !</h1>
                 <p onClick={() => handleDisconnect()}>Se déconnecter</p>
@@ -71,12 +75,14 @@ const Update = styled.div`
     animation: ${LoadingKeyframe} 1200ms linear infinite;
   }
   .saved{
-    color: ${theme.colors.success};
+    color: ${theme.colors.primary};
+    
     animation: ${Saved} 800ms linear;
     cursor: pointer;
-    transition: color 200ms;
+    transition: all 200ms;
   }
   .saved:hover{
+    opacity: 0.5;
     color: ${theme.colors.primary};
   }
   .failed{

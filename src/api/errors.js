@@ -5,7 +5,7 @@ export const convertApiError = (codeError) => {
         case 'auth/email-already-in-use':
             return 'Cette adresse mail est déjà utilisée.'
         case 'auth/invalid-email':
-            return "L'email fourni n'est pas valide."
+            return "L'email fourni n'est pas valide ou est déjà attribué."
         case 'auth/user-not-found':
             return 'Nous n\'avons trouvé aucun utilisateur avec ces informations de connexion.'
         case 'auth/invalid-credential':

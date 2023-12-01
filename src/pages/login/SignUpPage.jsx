@@ -5,7 +5,7 @@ import {styled} from "styled-components";
 import {PanelButton} from "../../components/admin/PanelButton.jsx";
 import {useContext, useState} from "react";
 import {theme} from "../../theme/index.js";
-import { createUserWithEmailAndPassword, updateProfile} from "firebase/auth";
+import {browserSessionPersistence, createUserWithEmailAndPassword, setPersistence, updateProfile} from "firebase/auth";
 import {auth} from "../../api/auth.js";
 import {UserContext} from "../../context/UserContext.jsx";
 import {useNavigate} from "react-router-dom";
@@ -57,7 +57,7 @@ export const SignUpPage = () => {
     const handleCreateAccount = (e) => {
         e.preventDefault()
         if (!loading) {
-            setLoading(true)
+            //setLoading(true)
             if (userCreation.password === '' || userCreation.confirmPassword === '' || userCreation.email === '' || userCreation.username === '') {
                 displayError('Veuillez remplir tous les champs du formulaire')
             }
@@ -69,39 +69,40 @@ export const SignUpPage = () => {
             }
             else {
                 setLoading(true)
-                createUserWithEmailAndPassword(auth, userCreation.email, userCreation.password)
-                    .then((userCredential) => {
-                        const user = userCredential.user;
-                        setUser({
-                            name: userCreation.username,
-                        });
-                        //setUser(user);
-                        updateProfile(user, {
-                            displayName: userCreation.username
-                        })
-                            .then(async () => {
-                                setUser({
-                                    name: user.displayName,
-                                    id: user.uid
-                                });
-                                createUserMenu(user.uid)
-                                const menu = await getUserMenu(user.uid).then(r => r)
-                                setStore(menu.data.menu)
-                                setMenuId(menu.id)
-                                navigate('/order')
+                setPersistence(auth, browserSessionPersistence)
+                    .then(() => {
+                        createUserWithEmailAndPassword(auth, userCreation.email, userCreation.password)
+                            .then((userCredential) => {
+                                const user = userCredential.user;
+                                updateProfile(user, {
+                                    displayName: userCreation.username
+                                })
+                                    .then(async () => {
+                                        setUser({
+                                            name: user.displayName,
+                                            id: user.uid
+                                        });
+                                        createUserMenu(user.uid)
+                                        const menu = await getUserMenu(user.uid).then(r => r)
+                                        setStore(menu.data.menu)
+                                        setMenuId(menu.id)
+                                        navigate('/order')
+                                    })
+                                    .catch((error) => {
+                                        console.error('Erreur lors de la mise à jour du profil :', error);
+                                        setLoading(false)
+                                    });
                             })
                             .catch((error) => {
-                                console.error('Erreur lors de la mise à jour du profil :', error);
+                                displayError(convertApiError(error.code))
                                 setLoading(false)
-                            });
+                                // displayError(error.code)
+                            })
                     })
                     .catch((error) => {
                         displayError(convertApiError(error.code))
-                        setLoading(false)
                         // displayError(error.code)
-                    })
-                    .finally(() => {
-                        //setLoading(false);
+                        setLoading(false)
                     });
             }
         }

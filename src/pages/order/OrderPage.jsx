@@ -9,16 +9,29 @@ import {AdminContext} from "../../context/AdminContext.jsx";
 import {theme} from "../../theme/index.js";
 import {PanelButton} from "../../components/admin/PanelButton.jsx";
 import {Cart} from "../../components/order/Cart.jsx";
+import {onAuthStateChanged} from "firebase/auth";
+import {auth} from "../../api/auth.js";
+import {getUserMenu} from "../../api/menu.js";
 
 export const OrderPage = () => {
-    const {store, resetContext, openedCart} = useContext(StoreContext)
+    const {store, resetContext, openedCart, setStore, setMenuId} = useContext(StoreContext)
     const {adminMode} = useContext(AdminContext)
-    const {user} = useContext(UserContext)
+    const {user, setUser} = useContext(UserContext)
     const navigate = useNavigate()
 
     useEffect(() => {
-        !user && navigate('/')
-    }, [user, navigate]);
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                setUser({name: user.displayName, id: user.uid})
+                const menu = await getUserMenu(user.uid)
+                setStore(menu.data.menu)
+                setMenuId(menu.id)
+                //setStore(getUserMenu(user.uid))
+                //console.log(store)
+            }
+        })
+    }, []);
+
     return user && (
         <UberContainer>
             <Cart />
