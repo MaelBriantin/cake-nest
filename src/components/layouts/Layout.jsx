@@ -2,9 +2,9 @@ import styled from "styled-components";
 import {theme} from "../../theme/index.js";
 import {Outlet} from "react-router-dom";
 import {Header} from "../global/Header.jsx";
-import {AdminPanel} from "../admin/AdminPanel.jsx";
-import {useContext, useState} from "react";
+import {useContext} from "react";
 import {UserContext} from "../../context/UserContext.jsx";
+import {useAutoUpdate} from "../../hooks/store/useAutoUpdate.js";
 
 export const Layout = () => {
     const {color} = useContext(UserContext)
@@ -48,4 +48,5 @@ const Main = styled.div`
   justify-content: center;
   overflow: hidden;
   position: relative;
+  width: 100%;
 `

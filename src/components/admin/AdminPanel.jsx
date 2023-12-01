@@ -8,9 +8,11 @@ import {MdEdit} from "react-icons/md";
 import {AddCakeForm} from "./AddCakeForm.jsx";
 import {EditCakeForm} from "./EditCakeForm.jsx";
 import {UserContext} from "../../context/UserContext.jsx";
+import {StoreContext} from "../../context/StoreContext.jsx";
 export const AdminPanel = () => {
     const {user, color, setColor} = useContext(UserContext)
     const {openedPanel, setOpenedPanel, adminMode, selectedTab, setSelectedTab} = useContext(AdminContext)
+    const {openedCart} = useContext(StoreContext)
     const [selectedAdd, setSelectedAdd] = useState(false)
     const [selectedModify, setSelectedModify] = useState(false)
     const [count, setCount] = useState(0)
@@ -40,7 +42,6 @@ export const AdminPanel = () => {
     useEffect(() => {
         let interval;
         if (count === 10) {
-            // Démarrer l'intervalle seulement si count est inférieur à 10
             interval = setInterval(() => {
                 const randomColor = Math.floor(Math.random() * 16777215).toString(16);
                 setColor(`#${'0'.repeat(6 - randomColor.length)}${randomColor}`);
@@ -49,7 +50,7 @@ export const AdminPanel = () => {
         return () => clearInterval(interval);
     }, [count, setCount]);
     return (
-        <Panel $openedPanel={openedPanel} $adminMode={adminMode}>
+        <Panel $openedPanel={openedPanel} $adminMode={adminMode} $openedCart={openedCart}>
             <Tabs>
                 <Tab openTab={true} />
                 <Tab value={'Ajouter'} onClick={() => handleAdd()} icon={<IoMdAdd />} isSelected={selectedAdd}/>
@@ -61,7 +62,7 @@ export const AdminPanel = () => {
                     : selectedTab === 'edit'
                     ? <EditCakeForm/>
                         : <Default $color={color}>
-                            { count < 10 ? <p>Hey,&#x20;<span onClick={() => changeColor()}>{user}</span>&#x20;! Ça va ?</p>
+                            { count < 10 ? <p>Hey,&#x20;<span onClick={() => changeColor()}>{user.name}</span>&#x20;! Ça va ?</p>
                             : <p>IT'S&#x20;<span onClick={() => stopColor()}>RAINBOW</span>&#x20;TIME!!!</p>}
                         </Default>
                 }
@@ -73,13 +74,14 @@ export const AdminPanel = () => {
 
 const Panel = styled.div`
   display: ${props => props.$adminMode ? "block" : "none"};
-  height: 400px;
-  width: 100%;
   position: absolute;
+  z-index: 3;
   bottom: 0;
-  left: 0;
+  right: 0;
+  height: 350px;
+  width: ${props => props.$openedCart ? '100%' : '80%'};
   transition: all 400ms;
-  transform: translateY(${props => props.$openedPanel ? "90%" : "0%"});
+  transform: translateY(${props => props.$openedPanel ? "100%" : "0%"});
 `
 
 const Tabs = styled.div`
@@ -89,14 +91,17 @@ const Tabs = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  position: absolute;
+  top: -40px;
+  left: 0;
 `
 
 const Content = styled.div`
   height: 100%;
   width: 100%;
   background: ${theme.colors.background_white};
-  border-top: ${theme.colors.greyMedium} 1px solid;
-  box-shadow: ${theme.shadows.card};
+  border: ${theme.colors.greyMedium} 1px solid;
+  //box-shadow: ${theme.shadows.card};
   display: flex;
   justify-content: center;
   align-items: center;

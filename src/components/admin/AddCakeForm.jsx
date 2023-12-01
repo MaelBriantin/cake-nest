@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import {theme} from "../../theme/index.js";
-import {useContext, useEffect, useState} from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import {Input} from "../global/Input.jsx";
 import {GiCupcake} from "react-icons/gi";
 import {FaCamera, FaEuroSign, FaRegCheckCircle} from "react-icons/fa";
@@ -8,10 +8,12 @@ import {PanelButton} from "./PanelButton.jsx";
 import {Alert} from "../global/Alert.jsx";
 import {isNumeric} from "../../utils/maths.js";
 import {StoreContext} from "../../context/StoreContext.jsx";
+import {FiBox} from "react-icons/fi";
+import {updateMenu} from "../../api/menu.js";
 
 export function AddCakeForm() {
     const [addedCake, setAddedCake] = useState(false)
-    const {store, setStore} = useContext(StoreContext)
+    const {store, setStore, addCake, setSync} = useContext(StoreContext)
     const emptyItem = {
         id: 0,
         imageSource: "",
@@ -43,8 +45,8 @@ export function AddCakeForm() {
     }
     const handleChangePrice = (e) => {
         const price = e.target.value;
-        if(isNumeric(price)) {
-            setError(prevState => {return {...prevState, price: false}})
+        if(isNumeric(price) || price === '') {
+            //setError(prevState => {return {...prevState, price: false}})
             setNewCake(prevState => {
                 return {...prevState, price}
             })
@@ -52,9 +54,10 @@ export function AddCakeForm() {
             //setError(prevState => {return {...prevState, price: true}})
         }
     }
-    const handleAddCake = () => {
-        const id = store.length > 0 ? store[store.length - 1].id + 1 : 1;
-
+    const handleAddCake = async () => {
+        //const id = store.length > 0 ? store.length + 1 : 1;
+        const id = crypto.randomUUID()
+        //console.log(id)
         const cakeToAdd = {
             id: id,
             imageSource: newCake.imageSource,
@@ -64,18 +67,43 @@ export function AddCakeForm() {
             isAvailable: newCake.isAvailable,
             isAdvertised: newCake.isAdvertised,
         };
-        setStore([...store, cakeToAdd])
+        setStore([cakeToAdd, ...store])
+        //addCake(cakeToAdd)
+        setSync(true)
         setAddedCake(true)
         setTimeout(() => setAddedCake(false), 2000)
         setNewCake(emptyItem)
+    }
+    const toggleAvailable = () => {
+        if(newCake.isAvailable) {
+            setNewCake(prevState => {
+                return {...prevState, isAvailable: false}
+            })
+        } else {
+            setNewCake(prevState => {
+                return {...prevState, isAvailable: true}
+            })
+        }
+
     }
     return (
         <Form>
             <Image>{newCake.imageSource === '' ? 'Aucune image' : <img src={newCake.imageSource} alt={'Il y a un problème avec votre image'}/>}</Image>
             <Fields>
-                <Input placeholder={'Nom du produit'} width={'300'} icon={<GiCupcake />} onInput={() => handleChangeName(event)} error={error.title} value={newCake.title}/>
-                <Input placeholder={'Lien url d\'une image (ex: https://la-photo-de-mo-produit.png)' } width={'650'} icon={<FaCamera />} onInput={() => handleChangeUrl(event)} error={error.imageSource} value={newCake.imageSource}/>
-                <Input placeholder={'Prix'} width={'150'} icon={<FaEuroSign />} type={'number'} onInput={() => handleChangePrice(event)} error={error.price} value={newCake.price}/>
+                <Input firstInput placeholder={'Nom du produit'} width={'300'} icon={<GiCupcake />} onInput={(e) => handleChangeName(e)} error={error.title} value={newCake.title}/>
+                <Input placeholder={'Lien url d\'une image (ex: https://la-photo-de-mo-produit.png)' } width={'650'} icon={<FaCamera />} onInput={(e) => handleChangeUrl(e)} error={error.imageSource} value={newCake.imageSource}/>
+                {/*<Input placeholder={'Prix'} width={'150'} icon={<FaEuroSign />} type={'number'} onInput={(e) => handleChangePrice(e)} error={error.price} value={newCake.price}/>*/}
+                <PriceToggle>
+                    <Input placeholder={'Prix'} width={'150'} icon={<FaEuroSign />} type={'number'} onInput={(e) => handleChangePrice(e)} value={newCake.price} />
+                    <AvailableToggle onClick={toggleAvailable} $isAvailable={newCake.isAvailable}>
+                        {
+                            newCake.isAvailable && <p><FiBox className={'icon'}/> En stock</p>
+                        }
+                        {
+                            !newCake.isAvailable && <p><FiBox className={'icon'}/> En rupture</p>
+                        }
+                    </AvailableToggle>
+                </PriceToggle>
                 <Validation>
                     <PanelButton text={'Ajouter un nouveau produit'} success onClick={() => handleAddCake()} />
                     { addedCake && <Alert message={"Ajouté avec succès"} icon={<FaRegCheckCircle />} color={theme.colors.success}/>}
@@ -84,6 +112,35 @@ export function AddCakeForm() {
         </Form>
     )
 }
+
+const PriceToggle = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+`
+
+const AvailableToggle = styled.div`
+  cursor: pointer;
+  width: 150px;
+  height: 44px;
+  background: ${ props => props.$isAvailable ?  theme.colors.primary : theme.colors.greyLight};
+  border-radius: ${ theme.borderRadius.round};
+  border: 2px solid ${props => props.$isAvailable ? theme.colors.primary : theme.colors.greyLight};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  p{
+    color: ${ props => props.$isAvailable ? theme.colors.white : theme.colors.greyDark}!important;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+`
 
 const Form = styled.div`
   height: 70%;

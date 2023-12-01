@@ -1,16 +1,25 @@
-import styled from "styled-components";
+import {styled, keyframes} from "styled-components";
 import {useLocation, useNavigate} from "react-router-dom";
 import {theme} from "../../theme/index.js";
-import {MdAccountCircle} from "react-icons/md";
+import {MdAccountCircle, MdCloudDone} from "react-icons/md";
 import {AdminToggle} from "../admin/AdminToggle.jsx";
 import {AdminContext} from "../../context/AdminContext.jsx";
 import {useContext} from "react";
 import {UserContext} from "../../context/UserContext.jsx";
+import {StoreContext} from "../../context/StoreContext.jsx";
+import {RxUpdate} from "react-icons/rx";
+import {IoIosCloudDone} from "react-icons/io";
+import {VscError} from "react-icons/vsc";
+import {useAutoUpdate} from "../../hooks/store/useAutoUpdate.js";
 
 export const UserInfos = (props) => {
+    // autoUpdate remote / local store
+    useAutoUpdate()
+
     const {user, setUser, setColor} = useContext(UserContext)
     const navigate = useNavigate()
     const {setAdminMode, setOpenedPanel, setSelectedTab} = useContext(AdminContext)
+    const {sync, syncFailed, setSync} = useContext(StoreContext)
     const handleDisconnect = () => {
         navigate('/')
         setColor(theme.colors.primary)
@@ -23,8 +32,13 @@ export const UserInfos = (props) => {
     return (
         <Connection>
             <AdminToggle />
+            <Update>
+                {(sync) && <RxUpdate className={'inSave'} />}
+                {(!sync && !syncFailed) && <IoIosCloudDone className={'saved'} title={'Synchronisé. Relancer la synchronisation ?'} onClick={() => setSync(true)}/>}
+                {(!sync && syncFailed) && <VscError className={'failed'} title={'Echec de synchronisation. Relancer ?'} onClick={() => setSync(true)}/>}
+            </Update>
             <Infos>
-                <h1>Salut, <span>{user}</span> !</h1>
+                <h1>Salut, <span>{user.name}</span> !</h1>
                 <p onClick={() => handleDisconnect()}>Se déconnecter</p>
             </Infos>
             <Icon>
@@ -34,6 +48,52 @@ export const UserInfos = (props) => {
 
     )
 }
+
+const LoadingKeyframe = keyframes`
+  to {
+    transform: rotate(360deg);
+  }
+`
+
+const Saved = keyframes`
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+  100% {
+    transform: scale(1);
+  }
+`
+
+const Update = styled.div`
+  transition: all 400ms;
+  font-size: ${theme.fonts.size.P3};
+  .inSave{
+    color: ${theme.colors.primary};
+    animation: ${LoadingKeyframe} 1200ms linear infinite;
+  }
+  .saved{
+    color: ${theme.colors.primary};
+    
+    animation: ${Saved} 800ms linear;
+    cursor: pointer;
+    transition: all 200ms;
+  }
+  .saved:hover{
+    opacity: 0.5;
+    color: ${theme.colors.primary};
+  }
+  .failed{
+    color: ${theme.colors.red};
+    animation: ${Saved} 800ms linear;
+    transition: color 200ms;
+  }
+  .failed:hover{
+    color: ${theme.colors.primary};
+  }
+`
 
 const Connection = styled.div`
   //width: 25%;

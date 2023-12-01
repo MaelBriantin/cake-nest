@@ -4,6 +4,7 @@ import App from './App.jsx'
 import './index.css'
 import styled from "styled-components";
 import {ToastContainer} from "react-toastify";
+import {ContextProviders} from "./context/ContextProviders.jsx";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -19,6 +20,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           pauseOnHover
           theme="light"
       />
-          <App />
+        <App />
   </React.StrictMode>,
 )

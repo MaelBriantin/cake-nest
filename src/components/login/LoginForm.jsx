@@ -1,4 +1,4 @@
-import {useContext, useState} from "react";
+import {useContext} from "react";
 import {useNavigate} from "react-router-dom";
 import styled from "styled-components";
 import {theme} from "../../theme/index.js";
@@ -27,12 +27,12 @@ export const LoginForm = () => {
 
     }
     return (
-        <Form>
+        <Form action={''} onSubmit={handleConnection}>
             <Input>
                 <InputIcon><MdAccountCircle /></InputIcon>
                 <InputField onChange={handleInputChange} placeholder="Entrez votre prénom..." type="text" value={user} required />
             </Input>
-            <PrimaryButton onClick={handleConnection}>Mon espace <MdKeyboardArrowRight style={{marginTop: '4px'}} /></PrimaryButton>
+            <PrimaryButton type={'submit'} onClick={handleConnection}>Mon espace <MdKeyboardArrowRight style={{marginTop: '4px'}} /></PrimaryButton>
         </Form>
     )
 }

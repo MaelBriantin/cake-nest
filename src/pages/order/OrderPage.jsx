@@ -1,53 +1,101 @@
-import {useLocation, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {useContext, useEffect} from "react";
 import {CakeCard} from "../../components/order/CakeCard.jsx";
 import styled from "styled-components";
-import {fakeMenu2} from "../../store/cakes/cakes.js"
 import {AdminPanel} from "../../components/admin/AdminPanel.jsx";
 import {StoreContext} from "../../context/StoreContext.jsx";
 import {UserContext} from "../../context/UserContext.jsx";
 import {AdminContext} from "../../context/AdminContext.jsx";
 import {theme} from "../../theme/index.js";
 import {PanelButton} from "../../components/admin/PanelButton.jsx";
+import {Cart} from "../../components/order/Cart.jsx";
+import {onAuthStateChanged} from "firebase/auth";
+import {auth} from "../../api/auth.js";
+import {getUserMenu} from "../../api/menu.js";
 
 export const OrderPage = () => {
-    const {store, resetContext} = useContext(StoreContext)
+    const {store, resetContext, openedCart, setStore, setMenuId} = useContext(StoreContext)
     const {adminMode} = useContext(AdminContext)
-    const {user} = useContext(UserContext)
+    const {user, setUser} = useContext(UserContext)
     const navigate = useNavigate()
-    const location = useLocation();
 
-    const state = location.state
-    const handleDisconnect = () => {
-        navigate('/')
-    }
     useEffect(() => {
-        !user && navigate('/')
-    }, [user, navigate]);
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                setUser({name: user.displayName, id: user.uid})
+                const menu = await getUserMenu(user.uid)
+                setStore(menu.data.menu)
+                setMenuId(menu.id)
+                //setStore(getUserMenu(user.uid))
+                //console.log(store)
+            }
+        })
+    }, []);
+
     return user && (
-        <Container>
-            {adminMode && store.length === 0 ? (
-                <EmptyStoreStyle>
-                    <p>Il n'y a plus de produits disponibles ?</p>
-                    <p>Cliquez ci-dessous pour les réinitialiser</p>
-                    <PanelButton primary text={'Générer de nouveaux gateaux'} onClick={() => resetContext()} />
+        <UberContainer>
+            <Cart />
+            {
+                store.length !== 0 && (
+                    <CardContainer $openedCart={openedCart}>
+                        { store.length > 0 && (
+                            store.map((e) => (
+                                <CakeCard title={e.title} image={e.imageSource} price={e.price} id={e.id} key={e.id} />
+                            ))
+                        )}
+                    </CardContainer>
+                )
+            }
+            { (adminMode && store.length === 0) && (
+                <EmptyStoreStyle $openedCart={openedCart}>
+                    {
+                        (adminMode && store.length === 0) && (
+                            <>
+                                <p>Il n'y a plus de produits disponibles ?</p>
+                                <p>Cliquez ci-dessous pour les réinitialiser</p>
+                                <PanelButton primary text={'Générer de nouveaux gateaux'} onClick={(e) => resetContext(e)} />
+                            </>
+                        )
+                    }
+                    {
+                        (!adminMode && store.length === 0) && (
+                            <>
+                                <p>Victime de notre succès</p>
+                                <p>De nouvelles recettes sont en préparation, revenez vite !</p>
+                            </>
+                        )
+                    }
                 </EmptyStoreStyle>
-            ) : store.length === 0 ? (
-                <EmptyStoreStyle>
-                    <p>Victime de notre succès</p>
-                    <p>De nouvelles recettes sont en préparation, revenez vite !</p>
-                </EmptyStoreStyle>
-            ) : (
-                store.map((e) => (
-                    <CakeCard title={e.title} image={e.imageSource} price={e.price} id={e.id} key={e.id} />
-                ))
             )}
             <AdminPanel />
-        </Container>
+        </UberContainer>
+
     )
 }
 
+
+const UberContainer = styled.div`
+  display: flex;
+  height: 100%;
+  width: 100%;
+`
+
+const CardContainer = styled.div`
+  width: ${props => props.$openedCart ? '100%' : '80%'};
+  padding: 50px;
+  margin-left: ${props => props.$openedCart ? '0%' : '20%'};
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 40px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  overflow: scroll;
+  transition: all 400ms;
+`;
+
 const EmptyStoreStyle = styled.div`
+  min-height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -58,16 +106,4 @@ const EmptyStoreStyle = styled.div`
     font-size: ${theme.fonts.size.P4};
     color: ${theme.colors.greyDark};
   }
-`
-
-const Container = styled.div`
-  max-height: 100%;
-  width: 80%;
-  padding: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 50px;
-  flex-wrap: wrap;
-  overflow: scroll;
 `
