@@ -84,7 +84,8 @@ export const SignUpPage = () => {
                                         });
                                         createUserMenu(user.uid)
                                         const menu = await getUserMenu(user.uid).then(r => r)
-                                        setStore(menu.data.menu)
+                                        setStore(menu.data?.menu)
+                                        //setCart(menu.data?.cart)
                                         setMenuId(menu.id)
                                         navigate('/order')
                                     })

@@ -52,6 +52,7 @@ export const CakeCard = (props) => {
                 }
             })
             setCart(cartCopy)
+            setSync(true)
         } else {
             const newItem = {
                 id: item.id,
@@ -60,6 +61,7 @@ export const CakeCard = (props) => {
                 animate: true
             }
             setCart([newItem, ...cart])
+            setSync(true)
         }
     }
 

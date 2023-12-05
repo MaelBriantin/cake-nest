@@ -12,11 +12,13 @@ import {Cart} from "../../components/order/Cart.jsx";
 import {onAuthStateChanged} from "firebase/auth";
 import {auth} from "../../api/auth.js";
 import {getUserMenu} from "../../api/menu.js";
+import {CartContext} from "../../context/CartContext.jsx";
 
 export const OrderPage = () => {
     const {store, resetContext, openedCart, setStore, setMenuId} = useContext(StoreContext)
     const {adminMode} = useContext(AdminContext)
     const {user, setUser} = useContext(UserContext)
+    const {setCart} = useContext(CartContext)
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -24,10 +26,9 @@ export const OrderPage = () => {
             if (user) {
                 setUser({name: user.displayName, id: user.uid})
                 const menu = await getUserMenu(user.uid)
-                setStore(menu.data.menu)
-                setMenuId(menu.id)
-                //setStore(getUserMenu(user.uid))
-                //console.log(store)
+                setStore(menu?.data?.menu)
+                setCart(menu?.data?.cart)
+                setMenuId(menu?.id)
             }
         })
     }, []);

@@ -35,18 +35,13 @@ export const getUserMenu = async (userId) => {
     return results[0];
 }
 
-// const docRef = doc(db, 'users', userUUID);
-// const docSnapshot = await getDocs(docRef);
-// if(docSnapshot.exists()) {
-//     return docSnapshot.data()
-// }
-
 export const createUserMenu = (userId) => {
     //console.log(getUser(username))
     addDoc(collection(db, 'menus'), {
         userId,
         createdAt: Date.now(),
-        menu: fakeMenu1
+        menu: fakeMenu1,
+        cart: []
     }).then(r => r)
 }
 
@@ -57,6 +52,13 @@ export const getMenu = async (menuId) => {
 }
 
 export const updateMenu = async (menuId, newMenu) => {
+    console.log('menu', newMenu)
     const docRef = doc(db, 'menus', menuId)
     await updateDoc(docRef, {menu: newMenu});
+}
+
+export const updateCart = async (menuId, newCart) => {
+    console.log('cart', newCart)
+    const docRef = doc(db, 'menus', menuId)
+    await updateDoc(docRef, {cart: newCart});
 }
