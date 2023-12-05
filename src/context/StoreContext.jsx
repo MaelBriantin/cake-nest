@@ -1,8 +1,7 @@
-import React, {createContext, useEffect, useState} from "react";
+import React, {createContext, useContext, useState} from "react";
 import {fakeMenu2} from "../store/cakes/cakes.js";
-import {getMenu, updateMenu} from "../api/menu.js";
+import {getMenu, updateCart, updateMenu} from "../api/menu.js";
 import {equals} from "../utils/compareObjects.js";
-import {useAutoUpdate} from "../hooks/store/useAutoUpdate.js";
 
 export const StoreContext = createContext({
     store: fakeMenu2,
@@ -33,35 +32,11 @@ export const StoreProvider = ({ children }) => {
     const [sync, setSync] = useState(false)
     const [syncFailed, setSyncFailed] = useState(false)
 
-    //
-    // useEffect(() => {
-    //     const timeoutId = setTimeout(() => {
-    //         if (sync) {
-    //             autoUpdateMenu();
-    //             setSync(!sync)
-    //         }
-    //     }, 3000);
-    //     return () => clearTimeout(timeoutId);
-    // }, [store, sync]);
-
-
     const resetContext = async (e) => {
         //await updateMenu(menuId, fakeMenu2);
         setStore(fakeMenu2)
         setSync(true)
     };
-
-    // useEffect(() => {
-    //     const timeoutId = setTimeout(() => {
-    //         if (sync) {
-    //             console.log('update')
-    //             autoUpdateMenu().then(r => r);
-    //             setSync(false)
-    //         }
-    //     }, 4000);
-    //
-    //     return () => clearTimeout(timeoutId);
-    // }, [store, sync]);
 
     const resetSelectedItem = () => {
         setSelectedItem({})
@@ -88,24 +63,6 @@ export const StoreProvider = ({ children }) => {
         setStore(updatedMenu)
     }
 
-    /**
-     * Deeply compares the state of remote store to the local state.
-     * If the states are different the local store is push to firebase.
-     *
-     * @returns {void}
-     */
-    const autoUpdateMenu = async () => {
-        const remoteStore = await getMenu(menuId)
-        if(!equals(remoteStore, store)){
-            try {
-                await updateMenu(menuId, store)
-            } catch (e) {
-                setSyncFailed(true)
-                console.error(e)
-            }
-        }
-    }
-
     return (
         <StoreContext.Provider
             value={{
@@ -121,7 +78,6 @@ export const StoreProvider = ({ children }) => {
                 setMenuId,
                 addCake,
                 deleteCake,
-                autoUpdateMenu,
                 sync,
                 setSync,
                 syncFailed,

@@ -11,8 +11,9 @@ import {RxUpdate} from "react-icons/rx";
 import {IoIosCloudDone} from "react-icons/io";
 import {VscError} from "react-icons/vsc";
 import {useAutoUpdate} from "../../hooks/store/useAutoUpdate.js";
+import {CartContext} from "../../context/CartContext.jsx";
 
-export const UserInfos = (props) => {
+export const UserInfos = () => {
     // autoUpdate remote / local store
     useAutoUpdate()
 
@@ -20,15 +21,16 @@ export const UserInfos = (props) => {
     const navigate = useNavigate()
     const {setAdminMode, setOpenedPanel, setSelectedTab} = useContext(AdminContext)
     const {sync, syncFailed, setSync} = useContext(StoreContext)
+    const {setCart, cart} = useContext(CartContext)
     const handleDisconnect = () => {
         navigate('/')
+        setCart([])
         setColor(theme.colors.primary)
         setUser('')
         setAdminMode(false)
         setOpenedPanel(true)
         setSelectedTab('')
     }
-
     return (
         <Connection>
             <AdminToggle />
