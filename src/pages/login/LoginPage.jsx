@@ -76,6 +76,7 @@ export const LoginPage = () => {
                             // Handle Errors here.
                             displayError(convertApiError(error.code))
                             //const errorMessage = error.message;
+                            setLoading(false)
                         })
                     })
                     .catch((error) => {
