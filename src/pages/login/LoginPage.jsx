@@ -19,6 +19,7 @@ import {LoginSubtitle} from "../../components/login/LoginSubtitle.jsx";
 import {convertApiError} from "../../api/errors.js";
 import {getUserMenu} from "../../api/menu.js";
 import {StoreContext} from "../../context/StoreContext.jsx";
+import {CartContext} from "../../context/CartContext.jsx";
 
 export const LoginPage = () => {
     const [userConnection, setUserConnection] = useState({
@@ -30,6 +31,7 @@ export const LoginPage = () => {
     const [error, setError] = useState('')
     const {setUser} = useContext(UserContext)
     const {setStore, setMenuId} = useContext(StoreContext)
+    const {setCart} = useContext(CartContext)
     const navigate = useNavigate()
     const onHandleChange = (type, e) => {
         switch (type) {
@@ -67,6 +69,7 @@ export const LoginPage = () => {
                                 });
                                 const menu = await getUserMenu(userCredential.user.uid)
                                 setStore(menu.data.menu)
+                                setCart(menu.data?.cart)
                                 setMenuId(menu.id)
                                 navigate('/order')
                             }).catch((error) => {

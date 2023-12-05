@@ -14,7 +14,7 @@ export const CartCard = (props) => {
     const [removed, setRemoved] = useState(false)
     const {item} = props;
     const {imageSource, title, price, cartQuantity, id} = item;
-    const {selectedItem, setSelectedItem, store} = useContext(StoreContext)
+    const {selectedItem, setSelectedItem, store, setSync} = useContext(StoreContext)
     const deleteFromCart = (e) => {
         e.preventDefault()
         e.stopPropagation()
@@ -23,6 +23,7 @@ export const CartCard = (props) => {
             const cartCopy = [...cart]
             setCart(cartCopy.filter(i => i.id !== id))
         }, 150)
+        setSync(true)
     }
     const selectElement = (e) => {
         e.stopPropagation();
