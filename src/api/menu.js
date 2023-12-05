@@ -41,7 +41,7 @@ export const createUserMenu = (userId) => {
         userId,
         createdAt: Date.now(),
         menu: fakeMenu1,
-        cart: {}
+        cart: []
     }).then(r => r)
 }
 
