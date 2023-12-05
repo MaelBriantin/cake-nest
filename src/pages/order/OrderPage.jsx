@@ -26,9 +26,9 @@ export const OrderPage = () => {
             if (user) {
                 setUser({name: user.displayName, id: user.uid})
                 const menu = await getUserMenu(user.uid)
-                setStore(menu.data.menu)
-                setCart(menu.data.cart)
-                setMenuId(menu.id)
+                setStore(menu?.data?.menu)
+                setCart(menu?.data?.cart)
+                setMenuId(menu?.id)
             }
         })
     }, []);
