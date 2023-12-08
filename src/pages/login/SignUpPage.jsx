@@ -13,6 +13,7 @@ import {LoginSubtitle} from "../../components/login/LoginSubtitle.jsx";
 import {convertApiError} from "../../api/errors.js";
 import {createUserMenu, getUserMenu} from "../../api/menu.js";
 import {StoreContext} from "../../context/StoreContext.jsx";
+import {CartContext} from "../../context/CartContext.jsx";
 
 export const SignUpPage = () => {
     const [userCreation, setUserCreation] = useState({
@@ -24,6 +25,7 @@ export const SignUpPage = () => {
     const navigate = useNavigate()
     const {setUser} = useContext(UserContext)
     const {setStore, setMenuId} = useContext(StoreContext)
+    const {setCart} = useContext(CartContext)
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
     const onHandleChange = (type, e) => {
@@ -85,7 +87,7 @@ export const SignUpPage = () => {
                                         createUserMenu(user.uid)
                                         const menu = await getUserMenu(user.uid).then(r => r)
                                         setStore(menu.data?.menu)
-                                        //setCart(menu.data?.cart)
+                                        setCart(menu.data?.cart)
                                         setMenuId(menu.id)
                                         navigate('/order')
                                     })

@@ -1,6 +1,6 @@
 import {doc, addDoc, getDocs, getDoc, query, where, collection, updateDoc} from 'firebase/firestore'
 import {db} from "./firebaseConfig.js";
-import {fakeMenu1, fakeMenu2} from "../store/cakes/cakes.js";
+import {fakeMenu1} from "../store/cakes/cakes.js";
 
 /**
  * Retrieves the menu data for a specified user.
@@ -52,13 +52,11 @@ export const getMenu = async (menuId) => {
 }
 
 export const updateMenu = async (menuId, newMenu) => {
-    console.log('menu', newMenu)
     const docRef = doc(db, 'menus', menuId)
     await updateDoc(docRef, {menu: newMenu});
 }
 
 export const updateCart = async (menuId, newCart) => {
-    console.log('cart', newCart)
     const docRef = doc(db, 'menus', menuId)
     await updateDoc(docRef, {cart: newCart});
 }
